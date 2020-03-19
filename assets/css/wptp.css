@@ -341,7 +341,7 @@ body.rtl .wptp-wrap th {
     margin-right: 5px;
 }
 
-#adminmenu #toplevel_page_wp-telegram-pro .menu-top div.wp-menu-image::before {
+#adminmenu #toplevel_page_wc-telegram-delivery .menu-top div.wp-menu-image::before {
     font-family: 'wptp' !important;
     content: "\e900";
 }
@@ -392,7 +392,7 @@ body.rtl .wptp-wrap th {
 }
 
 /*
-#adminmenuwrap .toplevel_page_wp-telegram-pro .wp-menu-image {
+#adminmenuwrap .toplevel_page_wc-telegram-delivery .wp-menu-image {
     filter: invert(1);
     opacity: .5;
 }
@@ -455,7 +455,7 @@ body.rtl .wptp-warning-h3:before{
 }
 
 @media screen and (min-width: 783px) {
-    body.rtl.toplevel_page_wp-telegram-pro {
+    body.rtl.toplevel_page_wc-telegram-delivery {
         overflow-x: hidden;
     }
 }

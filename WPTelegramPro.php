@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: WP Telegram Pro
- * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
- * Description: Integrate WordPress with Telegram
- * Author: Parsa Kafi
- * Version: 2.0.3
- * Author URI: http://parsa.ws
- * Text Domain: wp-telegram-pro
+ * Plugin Name: WC Telegram Delivery
+ * Plugin URI: https://github.com/alexanderuz/wc-telegram-delivery
+ * Description: Telegram bot for WooCommerce that accepting order with local delivery
+ * Author: ALeXaNDeR ft Parsa Kafi
+ * Version: 1.0.0
+ * Author URI: http://alexander.uz
+ * Text Domain: wc-telegram-delivery
  * WC requires at least: 3.0.0
  * WC tested up to: 3.9
  */
@@ -26,7 +26,7 @@ global $WPTelegramPro;
 $plugin = get_plugin_data(__FILE__, false, false);
 $version = $plugin['Version'];
 define('WPTELEGRAMPRO_VERSION', $version);
-define('WPTELEGRAMPRO_PLUGIN_KEY', 'wp-telegram-pro');
+define('WPTELEGRAMPRO_PLUGIN_KEY', 'wc-telegram-delivery');
 define('WPTELEGRAMPRO_MAX_PHOTO_SIZE', '10mb'); //https://core.telegram.org/bots/api#sending-files
 define('WPTELEGRAMPRO_MAX_FILE_SIZE', '50mb');  //https://core.telegram.org/bots/api#sending-files
 define('WPTELEGRAMPRO_BASENAME', plugin_basename(__FILE__));
@@ -52,7 +52,7 @@ HelpersWPTP::requireAll(WPTELEGRAMPRO_MOD_DIR);
 class WPTelegramPro
 {
     public static $instance = null;
-    public $plugin_key = 'wp-telegram-pro', $per_page = 1, $patterns_tags = array(),
+    public $plugin_key = 'wc-telegram-delivery', $per_page = 1, $patterns_tags = array(),
         $rand_id_length = 10, $now, $db_users_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
@@ -65,8 +65,8 @@ class WPTelegramPro
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
-        $this->db_users_table = $wpdb->prefix . 'wptelegrampro_users';
-        $this->plugin_name = __('WP Telegram Pro', $this->plugin_key);
+        $this->db_users_table = $wpdb->prefix . 'wctgdeliv_users';
+        $this->plugin_name = __('WC Telegram Delivery', $this->plugin_key);
         $this->now = date("Y-m-d H:i:s");
         $this->init($bypass);
         $this->words = apply_filters('wptelegrampro_words', $this->words);
@@ -1115,7 +1115,7 @@ class WPTelegramPro
     {
         global $table_prefix, $wpdb;
 
-        $table_name = 'wptelegrampro_users';
+        $table_name = 'wctgdeliv_users';
         $wp_table = $table_prefix . $table_name;
 
         if ($wpdb->get_var("show tables like '$wp_table'") != $wp_table) {
@@ -1134,6 +1134,7 @@ class WPTelegramPro
                   `user_active` tinyint(4) NOT NULL DEFAULT '1',
                   `created_at` datetime NOT NULL,
                   `updated_at` datetime NOT NULL,
+                  `phone_num` varchar(128) NULL,
                    PRIMARY KEY (`id`),
                    UNIQUE KEY `rand_id` (`rand_id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
@@ -1141,7 +1142,7 @@ class WPTelegramPro
             dbDelta($sql);
         }
 
-        update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
+        update_option('wctelegramdelivery_version', WPTELEGRAMPRO_VERSION, false);
         update_option('update_keyboard_time_wptp', current_time('U'), false);
     }
 
