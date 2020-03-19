@@ -1291,7 +1291,7 @@ class WooCommerceWPTP extends WPTelegramPro
         if (count($metas))
             $add_info = "\n" . implode(' / ', $metas);
 
-        $text = $product['title'] . "\n" . $price . $add_info . "\n" . $product['content'];
+        $text = $product['title'] . "\n" . $price . $add_info . "\n" . strip_tags($product['content']);
 
         if ($product[$image_send_mode] !== null)
             $this->telegram->sendFile('sendPhoto', $product[$image_send_mode], $text);
