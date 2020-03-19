@@ -121,9 +121,9 @@ class WordPressWPTP extends WPTelegramPro
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
         $new_keyboard = array();
-        if ($this->get_option('display_button_posts',1) == 1)
+        if ($this->get_option('display_button_posts',0) == 1)
 	        $new_keyboard[] = $this->words['posts'];
-        if ($this->get_option('display_button_categories',1) == 1)
+        if ($this->get_option('display_button_categories',0) == 1)
             $new_keyboard[] =$this->words['categories'];
         if ($this->get_option('wctgd_about_page_id', 0) > 0)
             $new_keyboard[]= $this->words['about'];
@@ -876,11 +876,11 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                         <label>
                             <input type="checkbox" value="1" id="display_button_posts"
-                                   name="display_button_posts" <?php checked($this->get_option('display_button_posts', 1)) ?>> <?php _e('Posts') ?>
+                                   name="display_button_posts" <?php checked($this->get_option('display_button_posts', 0)) ?>> <?php _e('Posts') ?>
                         </label>
                         <label>
                             <input type="checkbox" value="1" id="display_button_categories"
-                                   name="display_button_categories" <?php checked($this->get_option('display_button_categories', 1)) ?>> <?php _e('Categories') ?>
+                                   name="display_button_categories" <?php checked($this->get_option('display_button_categories', 0)) ?>> <?php _e('Categories') ?>
                         </label>
                     </td>
                 </tr>
