@@ -864,6 +864,19 @@ class WooCommerceWPTP extends WPTelegramPro
                     </td>
                 </tr>
                 <tr>
+                    <th colspan="2"><?php _e('Interactive chat', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="dont_display_links"><?php _e('Dont display links in chat ', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="dont_display_links"
+                                      name="dont_display_links" <?php checked($this->get_option('dont_display_links', 0)) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
                     <th colspan="2"><?php _e('Empty the cart', $this->plugin_key) ?></th>
                 </tr>
                 <tr>
@@ -941,13 +954,13 @@ class WooCommerceWPTP extends WPTelegramPro
 
         $in_cart = $this->check_cart($product['ID']);
         $txtincart = $in_cart>0?$in_cart:"";
-        $keyboard = array(array(
-            // array('text' => __('Detail', $this->plugin_key), 'callback_data' => 'product_detail_' . $product['ID']),
-            array('text' => '🔗️', 'url' => $product['link']),
-            array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+'),
-            array('text' => $txtincart.' 🛒', 'callback_data' => '/cart'),
-            array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-'),
-        ));
+        $keybuttons = array();
+        if ($this->get_option('dont_display_links',0) != 1)
+            $keybuttons[] = array('text' => '🔗️', 'url' => $product['link']);
+        $keybuttons[] = array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+');
+        $keybuttons[] = array('text' => $txtincart.' 🛒', 'callback_data' => '/cart');
+        $keybuttons[] = array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-');
+        $keyboard = array($keybuttons);
 
         // Gallery Emoji Button
         if ($this->get_option('gallery_keyboard') == 1 && is_array($product['galleries']) && count($product['galleries'])) {
