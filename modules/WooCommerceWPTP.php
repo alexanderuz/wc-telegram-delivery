@@ -684,12 +684,13 @@ class WooCommerceWPTP extends WPTelegramPro
 
         } elseif ($this->button_data_check($button_data, 'add_to_cart')) {
             $button_data = explode('_', $button_data);
+            $add_del = $button_data[5] == '+';
             if (get_post_status($button_data['3']) === 'publish') {
                 $in_cart = $this->check_cart($button_data['3']);
                 $can_to_cart = $this->can_to_cart($button_data['3']);
                 $can_to_cart_ = $this->can_to_cart($button_data['3'], true);
                 $alert = false;
-                if ($in_cart)
+                if (!$add_del)
                     $message = __('Remove from Cart:', $this->plugin_key) . ' ' . get_the_title($button_data['3']);
                 else
                     if ($can_to_cart)
@@ -701,8 +702,8 @@ class WooCommerceWPTP extends WPTelegramPro
                 $this->telegram->answerCallbackQuery($message, null, $alert);
 
                 // Add or Remove form Cart
-                if ($in_cart == true || $can_to_cart)
-                    $this->add_to_cart($button_data['3'], !$in_cart);
+                if ($can_to_cart)
+                    $this->add_to_cart($button_data['3'], $add_del);
 
                 $product = $this->query(array('p' => $button_data['3'], 'post_type' => 'product'));
                 $keyboard = $this->product_keyboard($product, $button_data['4']);
@@ -929,10 +930,13 @@ class WooCommerceWPTP extends WPTelegramPro
         }*/
 
         $in_cart = $this->check_cart($product['ID']);
+        $txtincart = $in_cart>0?$in_cart:"";
         $keyboard = array(array(
             // array('text' => __('Detail', $this->plugin_key), 'callback_data' => 'product_detail_' . $product['ID']),
             array('text' => '🔗️', 'url' => $product['link']),
-            array('text' => ($in_cart ? '- ' : '+ ') . '🛒', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id),
+            array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+'),
+            array('text' => $txtincart.' 🛒', 'callback_data' => '/cart'),
+            array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-'),
         ));
 
         // Gallery Emoji Button
@@ -1132,9 +1136,14 @@ class WooCommerceWPTP extends WPTelegramPro
         if (!isset($cart[$product_id]))
             $cart[$product_id] = array();
 
-        if (is_bool($add) === true)
-            $cart[$product_id]['added'] = $add;
-
+        if (is_bool($add) === true) {
+	        if ($add)
+	            $cart[ $product_id ]['count'] ++;
+	        else
+		        $cart[ $product_id ]['count'] --;
+        }
+        if ($cart[ $product_id ]['count'] < 0)
+	        $cart[ $product_id ]['count'] = 0;
         if (!empty($variation_key) && $variation_value != null)
             $cart[$product_id]['variations'][$variation_key] = $variation_value;
 
@@ -1183,11 +1192,10 @@ class WooCommerceWPTP extends WPTelegramPro
                 if (isset($cart[$product_id]['variations'][$variation_key]))
                     return $cart[$product_id]['variations'][$variation_key];
             } else {
-                if (isset($cart[$product_id]['added']) && $cart[$product_id]['added'] == true)
-                    return true;
+                    return $cart[$product_id]['count'];
             }
         }
-        return false;
+        return 0;
     }
 
     function send_products($products)
@@ -1292,7 +1300,7 @@ class WooCommerceWPTP extends WPTelegramPro
         $price = (!empty($product['saleprice']) ? $product['saleprice'] : $product['price']);
         if ($product['product_type'] == 'variable')
             $price = $product['price'];
-        $price = !empty($price) ? $this->wc_price($price) : $price;
+        $price = !empty($price) ? $price :0;
         return $price;
     }
 
@@ -1308,13 +1316,16 @@ class WooCommerceWPTP extends WPTelegramPro
         $c = 0;
         $columns = 6;
         $keyboard = $product_d = array();
+        $total_amount = 0;
         if (count($cart)) {
             foreach ($cart as $product_id => $item) {
-                if (isset($item['added']) && $item['added'] == true) {
+                if (isset($item['count']) && $item['count'] >0 ) {
                     $c++;
                     $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
                     $price = $this->product_price($product);
-                    $products .= $c . '- ' . $product['title'] . ' , ' . $price . "\n";
+                    $amount = $price*$item['count'];
+                    $total_amount += $amount;
+                    $products .= $c . '. ' . $product['title'] . ' ' . $item['count']." x ".$price." = ".$this->wc_price($amount)."\n";
                     $product_d[] = array(
                         'text' => $c,
                         'callback_data' => 'product_detail_' . $product_id
@@ -1325,9 +1336,10 @@ class WooCommerceWPTP extends WPTelegramPro
                     }
                 }
             }
+            $products .= __('Total', $this->plugin_key) .': '. $this->wc_price($total_amount);
 
             if (!empty($products)) {
-                $result = $this->words['cart'] . "\n" . $products;
+                $result = __('Your cart', $this->plugin_key) . ":\n" . $products;
             } else
                 $result = $this->words['cart_empty_message'];
         } else
@@ -1400,7 +1412,7 @@ class WooCommerceWPTP extends WPTelegramPro
                                 $cart_item_id = $cart_item_key;
                             }
                         }
-                    if (isset($item['added']) && $item['added'] == true) {
+                    if (isset($item['count']) && $item['count'] > 0) {
                         if (isset($cart[$product_id]['variations'])) {
                             if ($found)
                                 WC()->cart->remove_cart_item($cart_item_id);
@@ -1422,7 +1434,7 @@ class WooCommerceWPTP extends WPTelegramPro
                                 WC()->cart->add_to_cart($product_id, 1, $variation_id, $product_variation);
                             }
                         } elseif (!$found) {
-                            WC()->cart->add_to_cart($product_id);
+                            WC()->cart->add_to_cart($product_id, $item['count']);
                         }
                     } elseif (isset($item['added']) && $item['added'] == false && !empty($cart_item_id) && $found) {
                         WC()->cart->remove_cart_item($cart_item_id);
