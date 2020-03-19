@@ -1143,19 +1143,19 @@ class WooCommerceWPTP extends WPTelegramPro
     {
         $cart = $this->get_cart();
 
-        if (!isset($cart[$product_id]))
-            $cart[$product_id] = array();
+        if (!isset($cart['items'][$product_id]))
+            $cart['items'][$product_id] = array();
 
         if (is_bool($add) === true) {
 	        if ($add)
-	            $cart[ $product_id ]['count'] ++;
+	            $cart['items'][ $product_id ]['count'] ++;
 	        else
-		        $cart[ $product_id ]['count'] --;
+		        $cart['items'][ $product_id ]['count'] --;
         }
-        if ($cart[ $product_id ]['count'] < 0)
-	        $cart[ $product_id ]['count'] = 0;
+        if ($cart['items'][ $product_id ]['count'] < 0)
+	        $cart['items'][ $product_id ]['count'] = 0;
         if (!empty($variation_key) && $variation_value != null)
-            $cart[$product_id]['variations'][$variation_key] = $variation_value;
+            $cart['items'][$product_id]['variations'][$variation_key] = $variation_value;
 
         $this->update_user(array('cart' => serialize($cart)));
     }
@@ -1163,8 +1163,11 @@ class WooCommerceWPTP extends WPTelegramPro
     function get_cart()
     {
         $cart = $this->user['cart'];
-        if (empty($cart))
-            $cart = array();
+        if (empty($cart)) {
+	        $cart = array();
+	        $cart['items'] = array();
+	        $cart['state'] = 0;
+        }
         else
             $cart = unserialize($cart);
         return $cart;
@@ -1177,12 +1180,12 @@ class WooCommerceWPTP extends WPTelegramPro
         $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
         if ($product) {
             if ($product['product_type'] == 'variable') {
-                if (isset($cart[$product_id]['variations'])) {
-                    $values = array_values($cart[$product_id]['variations']);
+                if (isset($cart['items'][$product_id]['variations'])) {
+                    $values = array_values($cart['items'][$product_id]['variations']);
                     if (!$return_var && !in_array('0', $values)) {
                         return true;
                     } elseif ($return_var) {
-                        foreach ($cart[$product_id]['variations'] as $variation => $val)
+                        foreach ($cart['items'][$product_id]['variations'] as $variation => $val)
                             if ($val == '0')
                                 $variations[] = $variation;
                         return implode(', ', $variations);
@@ -1197,12 +1200,12 @@ class WooCommerceWPTP extends WPTelegramPro
     function check_cart($product_id, $variation_key = null)
     {
         $cart = $this->get_cart();
-        if (isset($cart[$product_id])) {
+        if (isset($cart['items'][$product_id])) {
             if ($variation_key !== null) {
-                if (isset($cart[$product_id]['variations'][$variation_key]))
-                    return $cart[$product_id]['variations'][$variation_key];
+                if (isset($cart['items'][$product_id]['variations'][$variation_key]))
+                    return $cart['items'][$product_id]['variations'][$variation_key];
             } else {
-                    return $cart[$product_id]['count'];
+                    return $cart['items'][$product_id]['count'];
             }
         }
         return 0;
@@ -1327,8 +1330,8 @@ class WooCommerceWPTP extends WPTelegramPro
         $columns = 6;
         $keyboard = $product_d = array();
         $total_amount = 0;
-        if (count($cart)) {
-            foreach ($cart as $product_id => $item) {
+        if (count($cart['items'])) {
+            foreach ($cart['items'] as $product_id => $item) {
                 if (isset($item['count']) && $item['count'] >0 ) {
                     $c++;
                     $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
@@ -1413,8 +1416,8 @@ class WooCommerceWPTP extends WPTelegramPro
             if ($this->get_option('empty_wc_cart_before_redirect' ,0))
                 WC()->cart->empty_cart();
             $wc_cart = WC()->cart->get_cart();
-            if (count($cart)) {
-                foreach ($cart as $product_id => $item) {
+            if (count($cart['items'])) {
+                foreach ($cart['items'] as $product_id => $item) {
                     $found = false;
                     if (!WC()->cart->is_empty())
                         foreach ($wc_cart as $cart_item_key => $values) {
@@ -1425,7 +1428,7 @@ class WooCommerceWPTP extends WPTelegramPro
                             }
                         }
                     if (isset($item['count']) && $item['count'] > 0) {
-                        if (isset($cart[$product_id]['variations'])) {
+                        if (isset($cart['items'][$product_id]['variations'])) {
                             if ($found)
                                 WC()->cart->remove_cart_item($cart_item_id);
                             $product_variation = array();
@@ -1440,8 +1443,8 @@ class WooCommerceWPTP extends WPTelegramPro
                                         $tax = get_taxonomy($var_name);
                                         $var_name = $tax->labels->singular_name;
                                     }
-                                    if (isset($cart[$product_id]['variations'][$var_name]))
-                                        $product_variation['attribute_' . $name] = $cart[$product_id]['variations'][$var_name];
+                                    if (isset($cart['items'][$product_id]['variations'][$var_name]))
+                                        $product_variation['attribute_' . $name] = $cart['items'][$product_id]['variations'][$var_name];
                                 }
                                 WC()->cart->add_to_cart($product_id, 1, $variation_id, $product_variation);
                             }
