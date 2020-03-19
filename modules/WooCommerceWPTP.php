@@ -878,6 +878,16 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
+                        <label for="empty_wc_cart_before_redirect"><?php _e('Empty WC cart before redirect', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="empty_wc_cart_before_redirect"
+                                      name="empty_wc_cart_before_redirect" <?php checked($this->get_option('empty_wc_cart_before_redirect',0)) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <label for="empty_cart_after_wc_payment_complete"><?php _e('After Payment Complete', $this->plugin_key) ?></label>
                     </td>
                     <td>
@@ -1400,6 +1410,8 @@ class WooCommerceWPTP extends WPTelegramPro
             }
             $cart_item_id = false;
             $cart = $this->get_cart();
+            if ($this->get_option('empty_wc_cart_before_redirect' ,0))
+                WC()->cart->empty_cart();
             $wc_cart = WC()->cart->get_cart();
             if (count($cart)) {
                 foreach ($cart as $product_id => $item) {
