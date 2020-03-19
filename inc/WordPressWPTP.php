@@ -120,10 +120,17 @@ class WordPressWPTP extends WPTelegramPro
     function default_keyboard($keyboard)
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        $new_keyboard = array(
-            $this->words['posts'],
-            $this->words['categories']
-        );
+        $new_keyboard = array();
+        if ($this->get_option('display_button_posts',1) == 1)
+	        $new_keyboard[] = $this->words['posts'];
+        if ($this->get_option('display_button_categories',1) == 1)
+            $new_keyboard[] =$this->words['categories'];
+        if ($this->get_option('wctgd_about_page_id', 0) > 0)
+            $new_keyboard[]= $this->words['about'];
+        if ($this->get_option('wctgd_payment_page_id', 0) > 0)
+            $new_keyboard[]= $this->words['payment'];
+        if ($this->get_option('wctgd_shipping_page_id', 0) > 0)
+            $new_keyboard[]= $this->words['shipping'];
 
         $search_post_type = $this->get_option('search_post_type', array());
         if (count($search_post_type))
@@ -559,6 +566,24 @@ class WordPressWPTP extends WPTelegramPro
             $posts_category = $this->get_tax_keyboard('category', 'category', 'parent');
             $keyboard = $this->telegram->keyboard($posts_category, 'inline_keyboard');
             $this->telegram->sendMessage($words['categories'] . ":", $keyboard);
+        } elseif ($user_text == '/about' || $user_text == $words['about']) {
+            $page_id = $this->get_option('wctgd_about_page_id', 0);
+            if ($page_id > 0) {
+	            $page = get_post( $page_id );
+	            $this->telegram->sendMessage( wp_strip_all_tags(  apply_filters( 'the_content', $page->post_content )));
+            }
+        } elseif ($user_text == '/payment' || $user_text == $words['payment']) {
+            $page_id = $this->get_option('wctgd_payment_page_id', 0);
+            if ($page_id > 0) {
+	            $page = get_post( $page_id );
+	            $this->telegram->sendMessage( wp_strip_all_tags(  apply_filters( 'the_content', $page->post_content )));
+            }
+        } elseif ($user_text == '/shipping' || $user_text == $words['shipping']) {
+            $page_id = $this->get_option('wctgd_shipping_page_id', 0);
+            if ($page_id > 0) {
+	            $page = get_post( $page_id );
+	            $this->telegram->sendMessage( wp_strip_all_tags(  apply_filters( 'the_content', $page->post_content )));
+            }
         }
     }
 
@@ -673,6 +698,27 @@ class WordPressWPTP extends WPTelegramPro
                         <label for="image_size"><?php _e('Image Size', $this->plugin_key) ?></label>
                     </td>
                     <td><?php echo $this->image_size_select('image_size', $this->get_option('image_size'), '---') ?></td>
+                </tr>
+                <tr>
+                    <th colspan="2"><?php _e('Pages', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wctgd_about_page_id"><?php _e('About page', $this->plugin_key); ?></label>
+                    </td>
+                    <td><?php echo $this->dropdown_pages('wctgd_about_page_id', $this->get_option('wctgd_about_page_id'), '---') ?></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wctgd_payment_page_id"><?php _e('Payment page', $this->plugin_key); ?></label>
+                    </td>
+                    <td><?php echo $this->dropdown_pages('wctgd_payment_page_id', $this->get_option('wctgd_payment_page_id'), '---') ?></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wctgd_shipping_page_id"><?php _e('Shipping page', $this->plugin_key); ?></label>
+                    </td>
+                    <td><?php echo $this->dropdown_pages('wctgd_shipping_page_id', $this->get_option('wctgd_shipping_page_id'), '---') ?></td>
                 </tr>
                 <tr>
                     <th colspan="2"><?php _e('Messages', $this->plugin_key) ?></th>
@@ -821,6 +867,21 @@ class WordPressWPTP extends WPTelegramPro
                         <span class="description">
                             <?php _e("You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status don't save)", $this->plugin_key) ?>
                         </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label ><?php _e('Display buttons', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="1" id="display_button_posts"
+                                   name="display_button_posts" <?php checked($this->get_option('display_button_posts', 1)) ?>> <?php _e('Posts') ?>
+                        </label>
+                        <label>
+                            <input type="checkbox" value="1" id="display_button_categories"
+                                   name="display_button_categories" <?php checked($this->get_option('display_button_categories', 1)) ?>> <?php _e('Categories') ?>
+                        </label>
                     </td>
                 </tr>
             </table>

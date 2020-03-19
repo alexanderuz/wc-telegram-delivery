@@ -126,6 +126,9 @@ class WPTelegramPro
             'dynamic_code_expired' => __('Dynamic code expired.', $this->plugin_key),
             'empty_username_password' => __('Username or password is empty.', $this->plugin_key),
             'unknown_error' => __('Unknown error', $this->plugin_key),
+            'about' => __('About', $this->plugin_key),
+            'payment' => __('Payment', $this->plugin_key),
+            'shipping' => __('Shipping', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -864,6 +867,25 @@ class WPTelegramPro
 
         return $select;
     }
+
+	function dropdown_pages($name, $selected = null, $none_select = null)
+	{
+
+		$argv = array(
+			'name'              => $name,
+			'selected'          => $selected,
+			'option_none_value' => '0',
+			'show_option_none'  => $none_select,
+			'sort_column'       => 'menu_order',
+			'sort_order'        => 'ASC',
+			'echo'              => false,
+			'hierarchical'      => 0,
+		);
+
+		$select = wp_dropdown_pages($argv);
+
+		return $select;
+	}
 
     function dropdown_filter($output, $r)
     {
