@@ -17,7 +17,7 @@ class WordPressWPTP extends WPTelegramPro
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard'));
         add_action('wptelegrampro_keyboard_response', array($this, 'post_action'));
-        add_action('wptelegrampro_keyboard_response', array($this, 'check_keyboard_need_update'), 9999);
+        add_action('wptelegrampro_keyboard_response', array($this, 'check_keyboard_need_update'), 0);
         add_filter('wptelegrampro_before_settings_update_message', array($this, 'update_api_token'), 10, 3);
         add_filter('wptelegrampro_option_settings', array($this, 'update_bot_username'), 100, 2);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 10);
@@ -508,6 +508,11 @@ class WordPressWPTP extends WPTelegramPro
         }
     }
 
+    public function keyboard_updated()
+    {
+	    $this->update_user_meta('update_keyboard_time', current_time('U'));
+    }
+
     function check_keyboard_need_update()
     {
         $system_time = get_option('update_keyboard_time_wptp');
@@ -516,8 +521,7 @@ class WordPressWPTP extends WPTelegramPro
             if (empty($update_keyboard_time) || $system_time > $update_keyboard_time) {
                 $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
                 $default_keyboard = $this->telegram->keyboard($default_keyboard);
-                $this->telegram->sendMessage(__('Update'), $default_keyboard);
-                $this->update_user_meta('update_keyboard_time', current_time('U'));
+                $this->telegram->setKeyboardNeedsUpdate($default_keyboard, array($this,'keyboard_updated'));
             }
         }
     }

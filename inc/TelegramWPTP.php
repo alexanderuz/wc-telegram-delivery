@@ -14,12 +14,20 @@ class TelegramWPTP
     protected $token, $input, $last_result = '', $raw_response, $valid_json, $decoded_body, $response_code, $response_message, $body, $headers, $file, $file_key, $disable_web_page_preview = false;
     protected $fileMethod = array('sendPhoto', 'sendAudio', 'sendDocument', 'sendVideo', 'sendVoice', 'sendVideoNote');
     protected $textMethod = array('sendMessage', 'editMessageText', 'InputTextMessageContent');
+    protected $newKeyboard = null;
+    protected $newKeyboardCallBack = null;
 
     function __construct($token)
     {
         $this->token = $token;
         add_filter('wptelegrampro_api_request_parameters', [$this, 'request_file_parameter']);
         add_action('http_api_curl', [$this, 'modify_http_api_curl'], 10, 3);
+    }
+
+    function setKeyboardNeedsUpdate($keyboard, $callback)
+    {
+    	$this->newKeyboard = $keyboard;
+    	$this->newKeyboardCallBack = $callback;
     }
 
     function input()
@@ -176,6 +184,10 @@ class TelegramWPTP
 
     function sendMessage($message, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
+    	if ($keyboard == null && $this->newKeyboard != null) {
+		    $keyboard = $this->newKeyboard;
+		    call_user_func($this->newKeyboardCallBack);
+	    }
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
         $parameter = array('chat_id' => $chat_id, 'text' => $message);
         if ($keyboard != null)
