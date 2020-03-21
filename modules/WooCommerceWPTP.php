@@ -26,6 +26,8 @@ class WooCommerceWPTP extends WPTelegramPro
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('wptelegrampro_inline_keyboard_response', [$this, 'inline_keyboard_response']);
         add_action('wptelegrampro_keyboard_response', [$this, 'keyboard_response']);
+        add_action('wptelegrampro_keyboard_response_location', [$this, 'keyboard_response']);
+        add_action('wptelegrampro_keyboard_response_contact', [$this, 'keyboard_response']);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 20);
 
         add_action('init', [$this, 'cart_init'], 99999);
@@ -409,6 +411,8 @@ class WooCommerceWPTP extends WPTelegramPro
             $this->words['product_categories'],
             $this->words['cart']
         );
+        if (get_option('checkout_orders_in_chat',0) == 1)
+            $new_keyboard[] = $this->words['checkout'];
         $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
         return $keyboard;
     }
@@ -612,6 +616,10 @@ class WooCommerceWPTP extends WPTelegramPro
 
         } elseif ($user_text == '/cart' || $user_text == $words['cart']) {
             $this->cart();
+        } elseif ($user_text == '/checkout' || $user_text == $words['checkout']) {
+            $this->checkout(0, false);
+        } elseif ($this->get_cart()['state'] > 1) {
+	        $this->checkout_process_message($user_text, $this->get_cart()['state']);
         }
     }
 
@@ -790,6 +798,9 @@ class WooCommerceWPTP extends WPTelegramPro
             $message_id = intval(end(explode('_', $button_data)));
             $this->telegram->answerCallbackQuery($this->words['refresh_cart']);
             $this->cart($message_id, $refresh = true);
+        } elseif ($this->button_data_check($button_data, 'process_checkout_')) {
+	        $message_id = intval(end(explode('_', $button_data)));
+	        $this->checkout($message_id);
         }
     }
 
@@ -865,6 +876,16 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <th colspan="2"><?php _e('Interactive chat', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="checkout_orders_in_chat"><?php _e('Checkout orders inside chat', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="checkout_orders_in_chat"
+                                      name="checkout_orders_in_chat" <?php checked($this->get_option('checkout_orders_in_chat', 0)) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -1335,6 +1356,91 @@ class WooCommerceWPTP extends WPTelegramPro
         return strip_tags(html_entity_decode(wc_price($price)));
     }
 
+	function checkout_process_message( $message, $state ) {
+		global $woocommerce;
+		$cart = $this->get_cart();
+		if ( $state == 4 )
+		{
+			$cart['name'] = $message;
+			$contact_keyboard = array(
+				array(
+					array(
+						'text'            => __('Send contact 📲', $this->plugin_key),
+						'request_contact' => true,
+					)
+				)
+			);
+			$contact_keyboard = $this->telegram->keyboard($contact_keyboard);
+
+			$this->telegram->sendMessage( __( 'Input your phone or send your contact', $this->plugin_key ), $contact_keyboard );
+			$cart['state'] = 5;
+		} elseif ( $state == 5 )
+        {
+            if (is_array($message))
+            {
+                $cart['phone'] = $message['phone_number'];
+            }
+            else
+			    $cart['phone'] = $message;
+	        $location_keyboard = array(
+		        array(
+			        array(
+				        'text'            => __('Send location 📍', $this->plugin_key),
+				        'request_location' => true,
+			        )
+		        )
+	        );
+	        $location_keyboard = $this->telegram->keyboard($location_keyboard);
+			$this->telegram->sendMessage( __( 'Input your address or send location', $this->plugin_key ), $location_keyboard );
+			$cart['state'] = 6;
+		} elseif ( $state == 6 )
+        {
+            if (is_array($message)) {
+	            $cart['address1'] =  'https://www.google.ru/maps/@'.$message['latitude'].','.$message['longitude'].',15z';
+	            $cart['address2'] = serialize($message);
+            }
+            else {
+	            $cart['address1'] = $message;
+	            $cart['address2'] = '';
+            }
+			$address         = array(
+				'first_name' => $cart['name'],
+				'last_name'  => '',
+				'company'    => '',
+				'email'      => '',
+				'phone'      => $cart['phone'],
+				'address_1'  => $cart['address1'],
+				'address_2'  => $cart['address2'],
+				'city'       => '',
+				'state'      => '',
+				'postcode'   => '',
+				'country'    => ''
+			);
+			$order           = wc_create_order();
+//			$order->set_address( $address, 'billing' );
+			$order->set_address( $address, 'shipping' );
+			foreach ( $cart['items'] as $product_id => $item ) {
+				$order->add_product( wc_get_product( $product_id ), $item['count'] );
+			}
+			$order->calculate_totals();
+	        $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+	        $default_keyboard = $this->telegram->keyboard($default_keyboard);
+
+			$this->telegram->sendMessage( sprintf(__('Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key), $order->get_id()), $default_keyboard);
+			$cart['state'] = 0;
+		$cart['items'] = array();
+		}
+		$this->update_user( array( 'cart' => serialize( $cart ) ) );
+	}
+
+    function checkout($message_id = null, $refresh = false)
+    {
+        $cart = $this->get_cart();
+        $cart['state'] = 4;
+	    $this->update_user(array('cart' => serialize($cart)));
+        $this->telegram->sendMessage(__('Input your name', $this->plugin_key));
+    }
+
     function cart($message_id = null, $refresh = false)
     {
         $cart = $this->get_cart();
@@ -1382,21 +1488,14 @@ class WooCommerceWPTP extends WPTelegramPro
         if (count($keyboard)) {
             if ($message_id == null)
                 $message_id = $this->telegram->get_last_result()['result']['message_id'];
-
-            $keyboard[] = array(
-                array(
-                    'text' => '🚮',
-                    'callback_data' => 'confirm_empty_cart_' . $message_id
-                ),
-                array(
-                    'text' => '🔄',
-                    'callback_data' => 'refresh_cart_' . $message_id
-                ),
-                array(
-                    'text' => '🛒',
-                    'url' => $this->cart_url()
-                ),
-            );
+	        $keybuttons   = array();
+	        $keybuttons[] = array( 'text' => '🚮', 'callback_data' => 'confirm_empty_cart_' . $message_id );
+	        $keybuttons[] = array( 'text' => '🔄', 'callback_data' => 'refresh_cart_' . $message_id );
+	        if ( $this->get_option( 'checkout_orders_in_chat', 0 ) != 1 )
+		        $keybuttons[] = array( 'text' => '🛒', 'url' => $this->cart_url() );
+	        else
+		        $keybuttons[] = array( 'text' => '🛒', 'callback_data' => 'process_checkout_' . $message_id );
+	        $keyboard[] = $keybuttons;
             $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
             $this->telegram->editMessageReplyMarkup($keyboards, $message_id);
         }
