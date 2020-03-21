@@ -101,17 +101,17 @@ class WPTelegramPro
     function words($words)
     {
         $new_words = array(
-            'yes' => __('Yes', $this->plugin_key),
-            'no' => __('No', $this->plugin_key),
+            'yes' => __('Yes ✅', $this->plugin_key),
+            'no' => __('No ❌', $this->plugin_key),
             'active' => __('Active', $this->plugin_key),
             'inactive' => __('Inactive', $this->plugin_key),
-            'next' => __('Next >', $this->plugin_key),
-            'prev' => __('< Previous', $this->plugin_key),
-            'next_page' => __('Next Page >', $this->plugin_key),
-            'prev_page' => __('< Previous Page', $this->plugin_key),
+            'next' => __('Next ➡️', $this->plugin_key),
+            'prev' => __('⬅️ Previous', $this->plugin_key),
+            'next_page' => __('Next Page ➡️', $this->plugin_key),
+            'prev_page' => __('⬅️ Previous Page', $this->plugin_key),
             'back' => __('Back', $this->plugin_key),
             'posts' => __('Posts', $this->plugin_key),
-            'search' => __('Search', $this->plugin_key),
+            'search' => __('Search 🔍', $this->plugin_key),
             'categories' => __('Categories', $this->plugin_key),
             'detail' => __('Detail', $this->plugin_key),
             'more' => __('More', $this->plugin_key),
@@ -126,9 +126,9 @@ class WPTelegramPro
             'dynamic_code_expired' => __('Dynamic code expired.', $this->plugin_key),
             'empty_username_password' => __('Username or password is empty.', $this->plugin_key),
             'unknown_error' => __('Unknown error', $this->plugin_key),
-            'about' => __('About', $this->plugin_key),
-            'payment' => __('Payment', $this->plugin_key),
-            'shipping' => __('Shipping', $this->plugin_key),
+            'about' => __('About 📝', $this->plugin_key),
+            'payment' => __('Payment 💰', $this->plugin_key),
+            'shipping' => __('Shipping 🚛', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 

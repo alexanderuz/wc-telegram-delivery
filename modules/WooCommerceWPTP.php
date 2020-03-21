@@ -394,9 +394,9 @@ class WooCommerceWPTP extends WPTelegramPro
     {
         $commands = array_merge($commands,
             array(
-                'products' => __('Products', $this->plugin_key),
-                'product_categories' => __('Product Categories List', $this->plugin_key),
-                'cart' => __('Cart', $this->plugin_key)
+                'products' => __('Products 📑', $this->plugin_key),
+                'product_categories' => __('Product Categories 📖', $this->plugin_key),
+                'cart' => __('Cart 🛒', $this->plugin_key)
             ));
         return $commands;
     }
