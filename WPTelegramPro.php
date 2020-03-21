@@ -218,6 +218,10 @@ class WPTelegramPro
         // When pressed inline keyboard button
         if (isset($data['data'])) {
             do_action('wptelegrampro_inline_keyboard_response', $data);
+        } elseif (isset($data['input']['message']['location'])) {
+	        do_action('wptelegrampro_keyboard_response_location', $data['input']['message']['location']);
+        } elseif (isset($data['input']['message']['contact'])) {
+	        do_action('wptelegrampro_keyboard_response_contact', $data['input']['message']['contact']);
         } else {
             do_action('wptelegrampro_keyboard_response', $user_text);
         }
