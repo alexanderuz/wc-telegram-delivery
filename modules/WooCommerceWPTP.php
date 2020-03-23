@@ -606,8 +606,10 @@ class WooCommerceWPTP extends WPTelegramPro
             );
 
             $products = $this->query($args);
-
-            $this->send_products($products);
+            if ($this->get_option('simple_display', 0))
+                $this->send_products($products,0, __('All products:'));
+            else
+                $this->send_products($products);
 
         } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories']) {
             $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'));
@@ -733,10 +735,11 @@ class WooCommerceWPTP extends WPTelegramPro
 
         } elseif ($this->button_data_check($button_data, 'product_page_')) {
             $current_page = intval($this->user['page']) == 0 ? 1 : intval($this->user['page']);
-            if ($button_data == 'product_page_next')
+            if ($this->button_data_check($button_data, 'product_page_next'))
                 $current_page++;
-            else
+            elseif ($this->button_data_check($button_data, 'product_page_prev'))
                 $current_page--;
+            $message_id = intval(end(explode('_', $button_data)));
             $this->update_user(array('page' => $current_page));
             $this->telegram->answerCallbackQuery(__('Page') . ': ' . $current_page);
             $args = array(
@@ -753,7 +756,7 @@ class WooCommerceWPTP extends WPTelegramPro
                 )
             );
             $products = $this->query($args);
-            $this->send_products($products);
+            $this->send_products($products, $message_id);
 
         } elseif ($this->button_data_check($button_data, 'product_category')) {
             $this->update_user(array('page' => 1));
@@ -763,7 +766,10 @@ class WooCommerceWPTP extends WPTelegramPro
             if ($product_category) {
                 $this->telegram->answerCallbackQuery(__('Category') . ': ' . $product_category->name);
                 $products = $this->query(array('category_id' => $product_category_id, 'per_page' => $this->get_option('products_per_page', 1), 'post_type' => 'product'));
-                $this->send_products($products);
+                if ($this->get_option('simple_display',0))
+                    $this->send_products($products,0, $product_category->name.':');
+                else
+                    $this->send_products($products);
             } else {
                 $this->telegram->answerCallbackQuery(__('Product Category Invalid!', $this->plugin_key));
             }
@@ -958,6 +964,14 @@ class WooCommerceWPTP extends WPTelegramPro
                         </label>
                         <label><input type="checkbox" value="1"
                                       name="category_keyboard" <?php checked($this->get_option('category_keyboard'), 1) ?>><?php _e('Category Buttons', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php _e('Products', $this->plugin_key) ?></td>
+                    <td>
+                        <label><input type="checkbox" value="1"
+                                      name="simple_display" <?php checked($this->get_option('simple_display',0)) ?>><?php _e('Simple list', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
@@ -1245,8 +1259,9 @@ class WooCommerceWPTP extends WPTelegramPro
         return 0;
     }
 
-    function send_products($products)
+    function send_products($products, $message_id = 0, $caption=null)
     {
+        $simple_mode = $this->get_option('simple_display',0);
         if (count($products['product'])) {
             $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
 
@@ -1254,6 +1269,55 @@ class WooCommerceWPTP extends WPTelegramPro
             $keyboard = $this->default_products_keyboard;
             $i = 1;
             $current_page = $this->user['page'];
+	        if ( $simple_mode ) {
+		        if ( $caption == null ) {
+			        $caption = __( 'Selected products:' );
+		        }
+		        $keyboard = array();
+		        $columns  = 2;
+		        $temp     = array();
+		        foreach ( $products['product'] as $product ) {
+			        $price  = $this->product_price( $product );
+			        $text   = $product['title'] . " - " . $price;
+			        $temp[] = array( 'text' => $text, 'callback_data' => 'product_detail_' . $product['ID'] );
+			        if ( $i % $columns == 0 ) {
+				        $keyboard[] = $temp;
+				        $temp       = array();
+			        }
+			        $i ++;
+		        }
+		        if ( count( $temp ) ) {
+			        $keyboard[] = $temp;
+		        }
+		        $keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
+		        if ( $message_id == 0 ) {
+			        $this->telegram->sendMessage( $caption, $keyboards );
+		        }
+		        if ( $products['max_num_pages'] > 1 ) {
+			        if ( $message_id == 0 ) {
+				        $message_id = $this->telegram->get_last_result()['result']['message_id'];
+			        }
+			        $keyboardn = array();
+			        if ( $current_page > 1 ) {
+				        $keyboardn[] = array( 'text'          => $this->words['prev_page'],
+				                              'callback_data' => 'product_page_prev_' . $message_id
+				        );
+			        }
+			        if ( $current_page < $products['max_num_pages'] ) {
+				        $keyboardn[] = array( 'text'          => $this->words['next_page'],
+				                              'callback_data' => 'product_page_next_' . $message_id
+				        );
+			        }
+			        if ( is_rtl() ) {
+				        $keyboardn = array_reverse( $keyboardn );
+			        }
+			        $keyboard[] = $keyboardn;
+			        $keyboards  = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
+			        $this->telegram->editMessageReplyMarkup( $keyboards, $message_id );
+		        }
+
+	        }
+            else
             foreach ($products['product'] as $product) {
                 $price = $this->product_price($product);
                 $text = $product['title'] . "\n" . $price . "\n" . $product['excerpt'];
