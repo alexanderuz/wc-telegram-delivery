@@ -129,6 +129,7 @@ class WPTelegramPro
             'about' => __('About 📝', $this->plugin_key),
             'payment' => __('Payment 💰', $this->plugin_key),
             'shipping' => __('Shipping 🚛', $this->plugin_key),
+            'language' => __('Language 🇺🇸', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -214,7 +215,8 @@ class WPTelegramPro
     {
         $data = $this->telegram_input;
         $user_text = $data['text'];
-
+        if ($this->user['locale'])
+	        switch_to_locale($this->user['locale']);
         // When pressed inline keyboard button
         if (isset($data['data'])) {
             do_action('wptelegrampro_inline_keyboard_response', $data);
@@ -1170,6 +1172,7 @@ class WPTelegramPro
                   `created_at` datetime NOT NULL,
                   `updated_at` datetime NOT NULL,
                   `phone_num` varchar(128) NULL,
+                  `locale` varchar(16) NULL, 
                    PRIMARY KEY (`id`),
                    UNIQUE KEY `rand_id` (`rand_id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
@@ -1194,6 +1197,18 @@ class WPTelegramPro
             self::$instance = new WPTelegramPro($bypass);
         return self::$instance;
     }
+
+	function available_locales() {
+		$reslocales = array();
+		$txlocales  = $this->get_option( 'available_locales', '' );
+		$locales    = explode( "\r\n", $txlocales );
+		foreach ( $locales as $locale ) {
+			$localearr    = explode( '|', $locale );
+			if ($locale)
+			    $reslocales[] = array( 'locale' => $localearr[1], 'title' => $localearr[0] );
+		}
+		return $reslocales;
+	}
 }
 
 $WPTelegramPro = WPTelegramPro::getInstance(true);

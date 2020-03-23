@@ -131,6 +131,8 @@ class WordPressWPTP extends WPTelegramPro
             $new_keyboard[]= $this->words['payment'];
         if ($this->get_option('wctgd_shipping_page_id', 0) > 0)
             $new_keyboard[]= $this->words['shipping'];
+        if (count($this->available_locales()) > 1)
+            $new_keyboard[]= $this->words['language'];
 
         $search_post_type = $this->get_option('search_post_type', array());
         if (count($search_post_type))
@@ -588,7 +590,18 @@ class WordPressWPTP extends WPTelegramPro
 	            $page = get_post( $page_id );
 	            $this->telegram->sendMessage( wp_strip_all_tags(  apply_filters( 'the_content', $page->post_content )));
             }
+        } elseif ($user_text == '/lang' || $user_text == $words['language']) {
+            $this->select_language();
         }
+    }
+
+    function select_language()
+    {
+        $keyboard = array();
+        foreach ($this->available_locales() as $locale)
+            $keyboard[] = array(array('text'=>$locale['title'], 'callback_data' => 'set_locale:'.$locale['locale']));
+        $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+        $this->telegram->sendMessage(__('Select language:',$this->plugin_key), $keyboards);
     }
 
     function inline_keyboard($data)
@@ -661,6 +674,16 @@ class WordPressWPTP extends WPTelegramPro
             } else {
                 $this->telegram->answerCallbackQuery(__('Not Found Comment!', $this->plugin_key));
             }
+        } elseif ($this->button_data_check($button_data, 'set_locale')) {
+            $newlocale = explode(':', $button_data)[1];
+            $this->update_user(array('locale' => $newlocale));
+            $this->update_user_meta('update_keyboard_time', 0);
+            switch_to_locale($newlocale);
+            $this->words = apply_filters('wptelegrampro_words', $this->words);
+	        $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+	        $default_keyboard = $this->telegram->keyboard($default_keyboard);
+	        $this->telegram->answerCallbackQuery(__('Success', $this->plugin_key));
+	        $this->telegram->sendMessage(__('Language successfully set', $this->plugin_key), $default_keyboard);
         }
     }
 
@@ -734,6 +757,15 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                         <textarea name="start_command" id="start_command" cols="50" class="emoji"
                                   rows="4"><?php echo $this->get_option('start_command', sprintf(__('Welcome to %s', $this->plugin_key), get_bloginfo('name'))) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="available_locales"><?php _e('Available locales<br>(chat languages, NOT site)', $this->plugin_key); ?></label>
+                    </td>
+                    <td>
+                        <textarea name="available_locales" id="available_locales" cols="50" class="emoji"
+                                  rows="4"><?php echo $this->get_option('available_locales', __('🇺🇸|en_US', $this->plugin_key)) ?></textarea>
                     </td>
                 </tr>
                 <tr>
