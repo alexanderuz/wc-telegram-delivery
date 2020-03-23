@@ -807,6 +807,8 @@ class WooCommerceWPTP extends WPTelegramPro
         } elseif ($this->button_data_check($button_data, 'process_checkout_')) {
 	        $message_id = intval(end(explode('_', $button_data)));
 	        $this->checkout($message_id);
+        } elseif ($this->button_data_check($button_data, 'display_cart')) {
+            $this->cart();
         }
     }
 
@@ -992,8 +994,9 @@ class WooCommerceWPTP extends WPTelegramPro
         $keybuttons = array();
         if ($this->get_option('dont_display_links',0) != 1)
             $keybuttons[] = array('text' => '🔗️', 'url' => $product['link']);
+        $keybuttons[] = array('text' => __("⬅️", $this->plugin_key), 'callback_data' => 'product_page_current');
         $keybuttons[] = array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+');
-        $keybuttons[] = array('text' => $txtincart.' 🛒', 'callback_data' => '/cart');
+        $keybuttons[] = array('text' => $txtincart.' 🛒', 'callback_data' => 'display_cart');
         $keybuttons[] = array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-');
         $keyboard = array($keybuttons);
 
