@@ -773,16 +773,29 @@ class WPTelegramPro
             'order' => 'DESC',
             'exclude' => $exclude
         ]);
+        $temps = array();
+        foreach ( $terms as $term)
+            $temps[] = $term->name;
+	    $max_lengths = max(array_map('mb_strlen', $temps));
+        $columns = $this->keyboard_columns($max_lengths, count($temps));
 	    if ( $terms ) {
 		    $terms_r = array();
+		    $i = 1;
+		    $temp = array();
 		    foreach ( $terms as $term ) {
-			    $terms_r[] = array(
-				    array(
+			    $temp[] = array(
 					    'text'          => $term->name,
 					    'callback_data' => $command . '_' . $term->term_id
-				    )
 			    );
+			    if ($i % $columns == 0)
+                {
+                    $terms_r[] = $temp;
+                    $temp = array();
+                }
+			    $i++;
 		    }
+		    if (count($temp))
+		        $terms_r[] = $temp;
 
 		    return $terms_r;
 	    }
