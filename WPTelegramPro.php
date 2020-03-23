@@ -773,25 +773,21 @@ class WPTelegramPro
             'order' => 'DESC',
             'exclude' => $exclude
         ]);
-        if ($terms) {
-            $terms_r = $terms_d = array();
-            $c = 1;
-            foreach ($terms as $term) {
-                $terms_d[] = array(
-                    'text' => $term->name,
-                    'callback_data' => $command . '_' . $term->term_id
-                );
-                if ($c % 3 == 0) {
-                    $terms_r[] = $terms_d;
-                    $terms_d = array();
-                }
-                $c++;
-            }
-            if (count($terms_d))
-                $terms_r[] = $terms_d;
-            return $terms_r;
-        }
-        return false;
+	    if ( $terms ) {
+		    $terms_r = array();
+		    foreach ( $terms as $term ) {
+			    $terms_r[] = array(
+				    array(
+					    'text'          => $term->name,
+					    'callback_data' => $command . '_' . $term->term_id
+				    )
+			    );
+		    }
+
+		    return $terms_r;
+	    }
+
+	    return false;
     }
 
     /**
