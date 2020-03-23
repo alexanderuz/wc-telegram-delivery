@@ -1511,9 +1511,9 @@ class WooCommerceWPTP extends WPTelegramPro
     function cart($message_id = null, $refresh = false)
     {
         $cart = $this->get_cart();
-        $products = $result = '';
+        $result = '';
         $c = 0;
-        $columns = 6;
+        $columns = 1;
         $keyboard = $product_d = array();
         $total_amount = 0;
         if (count($cart['items'])) {
@@ -1524,9 +1524,8 @@ class WooCommerceWPTP extends WPTelegramPro
                     $price = $this->product_price($product);
                     $amount = $price*$item['count'];
                     $total_amount += $amount;
-                    $products .= $c . '. ' . $product['title'] . ' ' . $item['count']." x ".$price." = ".$this->wc_price($amount)."\n";
                     $product_d[] = array(
-                        'text' => $c,
+                        'text' => $c . '. ' . $product['title'] . ' ' . $item['count']." x ".$price." = ".$this->wc_price($amount),
                         'callback_data' => 'product_detail_' . $product_id
                     );
                     if ($c % $columns == 0) {
@@ -1535,10 +1534,13 @@ class WooCommerceWPTP extends WPTelegramPro
                     }
                 }
             }
-            $products .= __('Total', $this->plugin_key) .': '. $this->wc_price($total_amount);
+	        $product_d[] = array(
+		        'text' => __('Total', $this->plugin_key) .': '. $this->wc_price($total_amount),
+		        'callback_data' => 'display_cart'
+	        );
 
-            if (!empty($products)) {
-                $result = __('Your cart', $this->plugin_key) . ":\n" . $products;
+            if (!empty($keyboard)) {
+                $result = __('Your cart:', $this->plugin_key);
             } else
                 $result = $this->words['cart_empty_message'];
         } else
