@@ -774,7 +774,6 @@ class WooCommerceWPTP extends WPTelegramPro
                 $current_page--;
             $message_id = intval(end(explode('_', $button_data)));
             $this->update_user(array('page' => $current_page));
-            $this->telegram->answerCallbackQuery(__('Page') . ': ' . $current_page);
             $args = array(
                 'category_id' => $this->get_user_meta('product_category_id'),
                 'post_type' => 'product',
@@ -789,6 +788,7 @@ class WooCommerceWPTP extends WPTelegramPro
                 )
             );
             $products = $this->query($args);
+	        $this->telegram->answerCallbackQuery(__('Page') . ': ' . $current_page . ' of ' .$products['max_num_pages']);
             $this->send_products($products, $message_id);
 
         } elseif ($this->button_data_check($button_data, 'product_category')) {
