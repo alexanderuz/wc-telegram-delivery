@@ -197,6 +197,15 @@ class TelegramWPTP
         return $this->last_result = $this->request('sendMessage', $parameter);
     }
 
+	function sendLocation($location, $keyboard = null, $chat_id = null)
+	{
+		$chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
+		$parameter = array('chat_id' => $chat_id, 'latitude'=>$location['latitude'], 'longitude'=>$location['longitude']);
+		if ($keyboard != null)
+			$parameter['reply_markup'] = $keyboard;
+		return $this->last_result = $this->request('sendLocation', $parameter);
+	}
+
     function editMessageText($message, $message_id, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
