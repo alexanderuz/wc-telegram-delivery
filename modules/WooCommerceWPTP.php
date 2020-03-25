@@ -407,7 +407,7 @@ class WooCommerceWPTP extends WPTelegramPro
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
         $new_keyboard = array(
-            $this->words['products'],
+//            $this->words['products'],
             $this->words['product_categories'],
             $this->words['cart']
         );
