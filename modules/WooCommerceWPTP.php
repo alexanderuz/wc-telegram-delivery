@@ -29,6 +29,7 @@ class WooCommerceWPTP extends WPTelegramPro
         add_action('wptelegrampro_keyboard_response_location', [$this, 'keyboard_response']);
         add_action('wptelegrampro_keyboard_response_contact', [$this, 'keyboard_response']);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 20);
+        add_filter('wctgdeliv_paysystems', [$this, 'default_paysystems'],1);
 
         add_action('init', [$this, 'cart_init'], 99999);
         add_action('woocommerce_payment_complete', [$this, 'woocommerce_payment_complete']);
@@ -340,18 +341,18 @@ class WooCommerceWPTP extends WPTelegramPro
             }
 
             $text = "*" . __('New Order', $this->plugin_key) . "*\n\n";
-            $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+            $text .= __('Order number', $this->plugin_key) . ': *' . $order_id . "*\n";
             $text .= __('Status', $this->plugin_key) . ': ' . wc_get_order_status_name($order->get_status()) . "\n";
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
             $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
             $text .= __('Name', $this->plugin_key) . ': ' . $order->get_billing_first_name() . "\n";
             $text .= __('Phone', $this->plugin_key) . ': ' . $order->get_billing_phone() . "\n";
             if (empty($order->get_shipping_address_2()))
-	            $text .= __('Address', $this->plugin_key) . ': ' . $order->get_shipping_address_1() . "\n";
+	            $text .= __('Address', $this->plugin_key) . ': *' . $order->get_shipping_address_1() . "*\n";
             else
 	            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
-            $text .= __('Total price', $this->plugin_key) . ': ' . $this->wc_price($order->get_total()) . "\n";
-            $text .= __('Payment method', $this->plugin_key) . ': ' . $order->get_payment_method_title() . "\n";
+            $text .= __('Total price', $this->plugin_key) . ': *' . $this->wc_price($order->get_total()) . "*\n";
+            $text .= __('Payment method', $this->plugin_key) . ': ' . $this->get_paysystem($order->get_payment_method())['name'] . "\n";
             $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
 
             foreach ($order->get_items() as $item_id => $item_data) {
@@ -403,6 +404,46 @@ class WooCommerceWPTP extends WPTelegramPro
             <?php } ?>
         </p>
         <?php
+    }
+
+    function default_paysystems($paysystems)
+    {
+        $paysystems[] = array(
+                'id' => 'cash',
+                'name' => __("Cash payment 💴"),
+            'description' => __("Cash payment upon receipt"),
+
+        );
+
+        $paysystems[] = array(
+	        'id' => 'cash',
+	        'name' => __("Card payment 💳"),
+	        'description' => __("Card payment upon receipt"),
+        );
+        return $paysystems;
+    }
+
+    function get_available_paysystems()
+    {
+       return apply_filters('wctgdeliv_paysystems', array());
+    }
+
+    function get_paysystem($id)
+    {
+	    $paysystems = $this->get_available_paysystems();
+	    foreach ($paysystems as $paysystem)
+		    if ($paysystem['id'] == $id)
+			    return $paysystem;
+	    return null;
+    }
+
+    function get_paysystem_id($paysystemname)
+    {
+        $paysystems = $this->get_available_paysystems();
+        foreach ($paysystems as $paysystem)
+            if ($paysystem['name'] == $paysystemname)
+                return $paysystem['id'];
+        return null;
     }
 
     function default_commands($commands)
@@ -1546,37 +1587,64 @@ class WooCommerceWPTP extends WPTelegramPro
 	            $cart['address1'] = $message;
 	            $cart['address2'] = '';
             }
-			$address         = array(
-				'first_name' => $cart['name'],
-				'last_name'  => '',
-				'company'    => '',
-				'email'      => '',
-				'phone'      => $cart['phone'],
-				'address_1'  => $cart['address1'],
-				'address_2'  => $cart['address2'],
-				'city'       => '',
-				'state'      => '',
-				'postcode'   => '',
-				'country'    => ''
-			);
-			$order           = wc_create_order();
-			$order->set_address( $address, 'billing' );
-			$order->set_address( $address, 'shipping' );
-			foreach ( $cart['items'] as $product_id => $item ) {
-			    if ($item['count'] > 0)
-				    $order->add_product( wc_get_product( $product_id ), $item['count'] );
-			    elseif (isset($item['variations']))
-                    foreach ($item['variations'] as $variation_id => $variation)
-                        $order->add_product(wc_get_product($variation_id), $variation);
-			}
-			$order->calculate_totals();
-	        $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
-	        $default_keyboard = $this->telegram->keyboard($default_keyboard);
+            $paysystems = $this->get_available_paysystems();
+            $payment_keyboard = array();
+            $temp_row = array();
+            $c = 1;
+            foreach ($paysystems as $paysystem)
+            {
+                $temp_row[] = $paysystem['name'];
+                if ($c % 2 == 0){
+                    $payment_keyboard[] = $temp_row;
+                $temp_row = array();
+                }
+            }
+            if (count($temp_row))
+                $payment_keyboard[] = $temp_row;
 
-			$this->telegram->sendMessage( sprintf(__('Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key), $order->get_id()), $default_keyboard);
-			do_action('woocommerce_thankyou', $order->get_id());
-			$cart['state'] = 0;
-		$cart['items'] = array();
+            $payment_keyboard = $this->telegram->keyboard($payment_keyboard);
+	        $this->telegram->sendMessage( __( 'Select payment method', $this->plugin_key ), $payment_keyboard );
+	        $cart['state'] = 7;
+		} elseif ( $state == 7) {
+            $paysystem_id = $this->get_paysystem_id($message);
+            if ($paysystem_id) {
+	            $address = array(
+		            'first_name' => $cart['name'],
+		            'last_name'  => '',
+		            'company'    => '',
+		            'email'      => '',
+		            'phone'      => $cart['phone'],
+		            'address_1'  => $cart['address1'],
+		            'address_2'  => $cart['address2'],
+		            'city'       => '',
+		            'state'      => '',
+		            'postcode'   => '',
+		            'country'    => ''
+	            );
+	            $order   = wc_create_order();
+	            $order->set_address( $address, 'billing' );
+	            $order->set_address( $address, 'shipping' );
+	            foreach ( $cart['items'] as $product_id => $item ) {
+		            if ( $item['count'] > 0 ) {
+			            $order->add_product( wc_get_product( $product_id ), $item['count'] );
+		            } elseif ( isset( $item['variations'] ) ) {
+			            foreach ( $item['variations'] as $variation_id => $variation ) {
+				            $order->add_product( wc_get_product( $variation_id ), $variation );
+			            }
+		            }
+	            }
+	            $order->set_payment_method($paysystem_id);
+	            $order->calculate_totals();
+	            $order->save();
+	            $default_keyboard = apply_filters( 'wptelegrampro_default_keyboard', array() );
+	            $default_keyboard = $this->telegram->keyboard( $default_keyboard );
+
+	            $this->telegram->sendMessage( sprintf( __( 'Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key ), $order->get_id() ), $default_keyboard );
+	            do_action('wctgdeliv_request_payment', $paysystem_id, $order);
+	            do_action( 'woocommerce_thankyou', $order->get_id() );
+                $cart['state'] = 0;
+                $cart['items'] = array();
+            }
 		}
 		$this->update_user( array( 'cart' => serialize( $cart ) ) );
 	}
