@@ -589,7 +589,9 @@ class WooCommerceWPTP extends WPTelegramPro
     {
         $words = $this->words;
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        if ($user_text == '/products' || $user_text == $words['products']) {
+        if ($user_text == '/start') {
+            $this->update_user( array('cart' => array()));
+        } elseif ($user_text == '/products' || $user_text == $words['products']) {
             $this->update_user(array('page' => 1));
             $this->update_user_meta('product_category_id', null);
             $args = array(
