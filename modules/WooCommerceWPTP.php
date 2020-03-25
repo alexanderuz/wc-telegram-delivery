@@ -323,23 +323,33 @@ class WooCommerceWPTP extends WPTelegramPro
         $users = $this->get_users(['Administrator', 'shop_manager']);
         if ($users) {
             $order = wc_get_order($order_id);
-            $keyboard = array(array(
-                array(
-                    'text' => '📝',
-                    'url' => admin_url('post.php?post=' . $order_id . '&action=edit')
-                ),
-                array(
-                    'text' => '📂',
-                    'url' => admin_url('edit.php?post_type=shop_order')
-                )
-            ));
-            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            if (!$this->get_option('dont_display_links',0)) {
+	            $keyboard  = array(
+		            array(
+			            array(
+				            'text' => '📝',
+				            'url'  => admin_url( 'post.php?post=' . $order_id . '&action=edit' )
+			            ),
+			            array(
+				            'text' => '📂',
+				            'url'  => admin_url( 'edit.php?post_type=shop_order' )
+			            )
+		            )
+	            );
+	            $keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
+            }
 
             $text = "*" . __('New Order', $this->plugin_key) . "*\n\n";
             $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
             $text .= __('Status', $this->plugin_key) . ': ' . wc_get_order_status_name($order->get_status()) . "\n";
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
             $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
+            $text .= __('Name', $this->plugin_key) . ': ' . $order->get_billing_first_name() . "\n";
+            $text .= __('Phone', $this->plugin_key) . ': ' . $order->get_billing_phone() . "\n";
+            if (empty($order->get_shipping_address_2()))
+	            $text .= __('Address', $this->plugin_key) . ': ' . $order->get_shipping_address_1() . "\n";
+            else
+	            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
             $text .= __('Total price', $this->plugin_key) . ': ' . $this->wc_price($order->get_total()) . "\n";
             $text .= __('Payment method', $this->plugin_key) . ': ' . $order->get_payment_method_title() . "\n";
             $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
@@ -354,8 +364,11 @@ class WooCommerceWPTP extends WPTelegramPro
 
             $text = apply_filters('wptelegrampro_wc_new_order_notification_text', $text, $order, $order_id);
 
-            foreach ($users as $user)
-                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            foreach ($users as $user) {
+	            $this->telegram->sendMessage( $text, $keyboards, $user['user_id'], 'Markdown' );
+                if (!empty($order->get_shipping_address_2()))
+                    $this->telegram->sendLocation( unserialize($order->get_shipping_address_2()), null, $user['user_id'] );
+            }
         }
     }
 
@@ -1547,7 +1560,7 @@ class WooCommerceWPTP extends WPTelegramPro
 				'country'    => ''
 			);
 			$order           = wc_create_order();
-//			$order->set_address( $address, 'billing' );
+			$order->set_address( $address, 'billing' );
 			$order->set_address( $address, 'shipping' );
 			foreach ( $cart['items'] as $product_id => $item ) {
 			    if ($item['count'] > 0)
@@ -1561,6 +1574,7 @@ class WooCommerceWPTP extends WPTelegramPro
 	        $default_keyboard = $this->telegram->keyboard($default_keyboard);
 
 			$this->telegram->sendMessage( sprintf(__('Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key), $order->get_id()), $default_keyboard);
+			do_action('woocommerce_thankyou', $order->get_id());
 			$cart['state'] = 0;
 		$cart['items'] = array();
 		}
