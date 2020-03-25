@@ -450,9 +450,9 @@ class WooCommerceWPTP extends WPTelegramPro
     {
         $commands = array_merge($commands,
             array(
-                'products' => __('Products 📑', $this->plugin_key),
-                'product_categories' => __('Product Categories 📖', $this->plugin_key),
-                'cart' => __('Cart 🛒', $this->plugin_key)
+                'products' => $this->words['products'],
+                'product_categories' => $this->words['product_categories'],
+                'cart' => $this->words['cart']
             ));
         return $commands;
     }
@@ -460,12 +460,15 @@ class WooCommerceWPTP extends WPTelegramPro
     function default_keyboard($keyboard)
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        $new_keyboard = array(
-//            $this->words['products'],
-            $this->words['product_categories'],
-            $this->words['cart']
-        );
-        if (get_option('checkout_orders_in_chat',0) == 1)
+        $new_keyboard = array();
+        if ($this->get_option('products_button',0))
+            $new_keyboard[] = $this->words['products'];
+	    if ($this->get_option('restaurant_mode',0))
+		    $new_keyboard[] = $this->words['menu'];
+	    else
+	        $new_keyboard[] = $this->words['product_categories'];
+	    $new_keyboard[] = $this->words['cart'];
+        if ($this->get_option('checkout_orders_in_chat',0))
             $new_keyboard[] = $this->words['checkout'];
         $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
         return $keyboard;
@@ -474,9 +477,9 @@ class WooCommerceWPTP extends WPTelegramPro
     function words($words)
     {
         $new_words = array(
-            'products' => __('Products', $this->plugin_key),
-            'product_categories' => __('Product Categories', $this->plugin_key),
-            'cart' => __('Cart', $this->plugin_key),
+            'products' => __('Products 📑', $this->plugin_key),
+            'product_categories' => __('Product Categories 📖', $this->plugin_key),
+            'cart' => __('Cart 🛒', $this->plugin_key),
             'checkout' => __('Checkout', $this->plugin_key),
             'cart_empty_message' => __('Your cart is empty.', $this->plugin_key),
             'confirm_empty_cart' => __('Empty Cart?', $this->plugin_key),
@@ -484,6 +487,7 @@ class WooCommerceWPTP extends WPTelegramPro
             'refresh_cart' => __('Refresh Cart', $this->plugin_key),
             'instock' => __('In stock', $this->plugin_key),
             'outofstock' => __('Out of stock', $this->plugin_key),
+            'menu' => __('Menu 🍽', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -926,6 +930,16 @@ class WooCommerceWPTP extends WPTelegramPro
             <table>
                 <tr>
                     <td>
+                        <label for="restaurant_mode"><?php _e('Restaurant mode', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="restaurant_mode"
+                                      name="restaurant_mode" <?php checked($this->get_option('restaurant_mode', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
+                        </label>
+
+                </tr>
+                <tr>
+                    <td>
                         <label for="products_per_page"><?php _e('Products Per Page', $this->plugin_key) ?></label>
                     </td>
                     <td><input type="number" name="products_per_page" id="products_per_page"
@@ -1066,6 +1080,9 @@ class WooCommerceWPTP extends WPTelegramPro
                         </label>
                         <label><input type="checkbox" value="1"
                                       name="category_keyboard" <?php checked($this->get_option('category_keyboard'), 1) ?>><?php _e('Category Buttons', $this->plugin_key) ?>
+                        </label>
+                        <label><input type="checkbox" value="1"
+                                      name="products_button" <?php checked($this->get_option('products_button',0)) ?>><?php _e('All products Button', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
