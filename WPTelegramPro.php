@@ -130,6 +130,8 @@ class WPTelegramPro
             'payment' => __('Payment 💰', $this->plugin_key),
             'shipping' => __('Shipping 🚛', $this->plugin_key),
             'language' => __('Language 🇺🇸', $this->plugin_key),
+            'help' => __('Help ❓', $this->plugin_key),
+            'contact' => __('Contact us ✉️', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 

@@ -21,6 +21,7 @@ class WordPressWPTP extends WPTelegramPro
         add_filter('wptelegrampro_before_settings_update_message', array($this, 'update_api_token'), 10, 3);
         add_filter('wptelegrampro_option_settings', array($this, 'update_bot_username'), 100, 2);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 10);
+        add_filter('wptelegrampro_default_keyboard', [$this, 'helpsettings_keyboard'], 9999);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 10);
 
         add_action('show_user_profile', [$this, 'user_profile']);
@@ -117,6 +118,20 @@ class WordPressWPTP extends WPTelegramPro
         return $commands;
     }
 
+    function helpsettings_keyboard($keyboard)
+    {
+	    $this->words = apply_filters('wptelegrampro_words', $this->words);
+	    $new_keyboard = array();
+	    if (count($this->available_locales()) > 1)
+		    $new_keyboard[]= $this->words['language'];
+	    if ($this->get_option('wctgd_help_page_id', 0) > 0)
+	        $new_keyboard[]= $this->words['help'];
+	    if (!empty($this->get_option('wctgd_contact_person', '')))
+	        $new_keyboard[]= $this->words['contact'];
+	    $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
+	    return $keyboard;
+    }
+
     function default_keyboard($keyboard)
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
@@ -131,8 +146,6 @@ class WordPressWPTP extends WPTelegramPro
             $new_keyboard[]= $this->words['payment'];
         if ($this->get_option('wctgd_shipping_page_id', 0) > 0)
             $new_keyboard[]= $this->words['shipping'];
-        if (count($this->available_locales()) > 1)
-            $new_keyboard[]= $this->words['language'];
 
         $search_post_type = $this->get_option('search_post_type', array());
         if (count($search_post_type))
@@ -592,6 +605,18 @@ class WordPressWPTP extends WPTelegramPro
             }
         } elseif ($user_text == '/lang' || $user_text == $words['language']) {
             $this->select_language();
+        } elseif ($user_text == '/help' || $user_text == $words['help']) {
+	        $page_id = $this->get_option('wctgd_help_page_id', 0);
+	        if ($page_id > 0) {
+		        $page = get_post( $page_id );
+		        $this->telegram->sendMessage( wp_strip_all_tags(  apply_filters( 'the_content', $page->post_content )));
+	        }
+        } elseif ($user_text == '/contact' || $user_text == $words['contact']) {
+	        $contact_person = $this->get_option('wctgd_contact_person', '');
+	        if (!empty($contact_person))
+            {
+                $this->telegram->sendMessage(__("To contact us write message to:\n @", $this->plugin_key).$contact_person);
+            }
         }
     }
 
@@ -731,6 +756,12 @@ class WordPressWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
+                        <label for="wctgd_help_page_id"><?php _e('Help page', $this->plugin_key); ?></label>
+                    </td>
+                    <td><?php echo $this->dropdown_pages('wctgd_help_page_id', $this->get_option('wctgd_help_page_id'), '---') ?></td>
+                </tr>
+                <tr>
+                    <td>
                         <label for="wctgd_about_page_id"><?php _e('About page', $this->plugin_key); ?></label>
                     </td>
                     <td><?php echo $this->dropdown_pages('wctgd_about_page_id', $this->get_option('wctgd_about_page_id'), '---') ?></td>
@@ -766,6 +797,14 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                         <textarea name="available_locales" id="available_locales" cols="50" class="emoji"
                                   rows="4"><?php echo $this->get_option('available_locales', __('🇺🇸|en_US', $this->plugin_key)) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wctgd_contact_person"><?php _e('Contact person<br>(without @)', $this->plugin_key); ?></label>
+                    </td>
+                    <td>
+                        <input type="text" name="wctgd_contact_person" id="wctgd_contact_person" value=" <?php echo $this->get_option('wctgd_contact_person', '') ?>"/>
                     </td>
                 </tr>
                 <tr>
