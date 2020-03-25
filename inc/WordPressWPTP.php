@@ -804,7 +804,7 @@ class WordPressWPTP extends WPTelegramPro
                         <label for="wctgd_contact_person"><?php _e('Contact person<br>(without @)', $this->plugin_key); ?></label>
                     </td>
                     <td>
-                        <input type="text" name="wctgd_contact_person" id="wctgd_contact_person" value=" <?php echo $this->get_option('wctgd_contact_person', '') ?>"/>
+                        <input type="text" name="wctgd_contact_person" id="wctgd_contact_person" value="<?php echo $this->get_option('wctgd_contact_person', '') ?>"/>
                     </td>
                 </tr>
                 <tr>
