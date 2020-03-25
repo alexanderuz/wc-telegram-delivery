@@ -345,8 +345,8 @@ class WooCommerceWPTP extends WPTelegramPro
             $text .= __('Status', $this->plugin_key) . ': ' . wc_get_order_status_name($order->get_status()) . "\n";
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
             $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
-            $text .= __('Name', $this->plugin_key) . ': ' . $order->get_billing_first_name() . "\n";
-            $text .= __('Phone', $this->plugin_key) . ': ' . $order->get_billing_phone() . "\n";
+            $text .= __('Name', $this->plugin_key) . ': *' . $order->get_billing_first_name() . "*\n";
+            $text .= __('Phone', $this->plugin_key) . ': *' . $order->get_billing_phone() . "*\n";
             if (empty($order->get_shipping_address_2()))
 	            $text .= __('Address', $this->plugin_key) . ': *' . $order->get_shipping_address_1() . "*\n";
             else
