@@ -551,9 +551,20 @@ class WordPressWPTP extends WPTelegramPro
         if ($user_text == '/start' || strpos($user_text, '/start') !== false) {
             $message = $this->get_option('start_command');
             $message = empty(trim($message)) ? __('Welcome!', $this->plugin_key) : $message;
-            $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
-            $default_keyboard = $this->telegram->keyboard($default_keyboard);
-            $this->telegram->sendMessage($message, $default_keyboard);
+            if (strpos($message, 'langselect'))
+            {
+                $message = str_replace('langselect', '', $message);
+	            $keyboard = array();
+	            foreach ($this->available_locales() as $locale)
+		            $keyboard[] = array(array('text'=>$locale['title'], 'callback_data' => 'set_locale:'.$locale['locale']));
+	            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+
+            }else
+            {
+	            $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+	            $keyboards = $this->telegram->keyboard($default_keyboard);
+            }
+	        $this->telegram->sendMessage($message, $keyboards);
 
         } else if ($user_text == '/search' || $user_text == $words['search']) {
             $this->telegram->sendMessage(__('Enter word for search:', $this->plugin_key));
