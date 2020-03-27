@@ -671,7 +671,7 @@ class WooCommerceWPTP extends WPTelegramPro
             else
                 $this->send_products($products);
 
-        } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories']) {
+        } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories'] || $user_text == $words['menu']) {
             $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'));
             $keyboard = $this->telegram->keyboard($product_category, 'inline_keyboard');
             $this->telegram->sendMessage($words['product_categories'] . ":", $keyboard);
