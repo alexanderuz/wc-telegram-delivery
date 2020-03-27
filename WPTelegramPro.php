@@ -217,8 +217,10 @@ class WPTelegramPro
     {
         $data = $this->telegram_input;
         $user_text = $data['text'];
-        if ($this->user['locale'])
-	        switch_to_locale($this->user['locale']);
+	    if ( $this->user['locale'] ) {
+		    switch_to_locale( $this->user['locale'] );
+		    load_plugin_textdomain( $this->plugin_key );
+	    }
         // When pressed inline keyboard button
         if (isset($data['data'])) {
             do_action('wptelegrampro_inline_keyboard_response', $data);

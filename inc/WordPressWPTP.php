@@ -28,6 +28,7 @@ class WordPressWPTP extends WPTelegramPro
         add_action('edit_user_profile', [$this, 'user_profile']);
         add_action('wp_before_admin_bar_render', [$this, 'admin_bar_render']);
         add_action('admin_notices', [$this, 'user_disconnect']);
+        add_filter('plugin_locale', [$this, 'wctgdeliv_plugin_locale'],10,2);
 
         if ($this->get_option('new_comment_notification', false))
             add_action('comment_post', array($this, 'comment_notification'), 10, 2);
@@ -702,14 +703,25 @@ class WordPressWPTP extends WPTelegramPro
         } elseif ($this->button_data_check($button_data, 'set_locale')) {
             $newlocale = explode(':', $button_data)[1];
             $this->update_user(array('locale' => $newlocale));
+	        $this->user['locale'] = $newlocale;
             $this->update_user_meta('update_keyboard_time', 0);
             switch_to_locale($newlocale);
-            $this->words = apply_filters('wptelegrampro_words', $this->words);
+            load_plugin_textdomain($this->plugin_key);
+	        $this->words = apply_filters('wptelegrampro_words', $this->words);
 	        $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
 	        $default_keyboard = $this->telegram->keyboard($default_keyboard);
 	        $this->telegram->answerCallbackQuery(__('Success', $this->plugin_key));
 	        $this->telegram->sendMessage(__('Language successfully set', $this->plugin_key), $default_keyboard);
         }
+    }
+
+    function wctgdeliv_plugin_locale($locale, $domain)
+    {
+        if ($domain != $this->plugin_key)
+            return;
+        if (isset($this->user) && !empty($this->user['locale']))
+            return $this->user['locale'];
+        return $locale;
     }
 
     function settings_tab($tabs)
