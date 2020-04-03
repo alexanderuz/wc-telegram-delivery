@@ -56,7 +56,7 @@ class WPTelegramPro
         $rand_id_length = 10, $now, $db_users_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
-    protected $aboutTabID = 'about-wptp-tab', $page_title_divider, $wp_user_rc_key = '_random_code_wptp';
+    protected $aboutTabID = 'about-wptp-tab', $usersTabID = 'users-wptp-tab', $page_title_divider, $wp_user_rc_key = '_random_code_wptp';
 
     public function __construct($bypass = false)
     {
@@ -93,6 +93,7 @@ class WPTelegramPro
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_helps_content', [$this, 'helps_command_list'], 1);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
+            add_action('wptelegrampro_settings_content', [$this, 'users_settings_content']);
             add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 9999, 3);
             add_filter('wptelegrampro_telegram_bot_api_parameters', [$this, 'fix_telegram_text'], 9999);
         }
@@ -154,6 +155,7 @@ class WPTelegramPro
 
     function settings_tab($tabs)
     {
+        $tabs[$this->usersTabID] = __('Users', $this->plugin_key);
         $tabs[$this->aboutTabID] = __('About', $this->plugin_key);
         return $tabs;
     }
@@ -198,17 +200,51 @@ class WPTelegramPro
         ?>
         <div id="<?php echo $this->aboutTabID ?>-content" class="wptp-tab-content hidden">
             <h3><?php _e('Integrate WordPress with Telegram', $this->plugin_key) ?></h3>
-            <p><?php _e('Do you like WP Telegram Pro?', $this->plugin_key) ?>
+            <p><?php _e('Do you like WC Telegram Delivery?', $this->plugin_key) ?>
                 <br>
-                <a href="https://wordpress.org/support/plugin/wp-telegram-pro/reviews/#new-post" target="_blank">
+                <a href="https://wordpress.org/support/plugin/wc-telegram-delivery/reviews/#new-post" target="_blank">
                     <?php _e('Give it a rating', $this->plugin_key) ?>
                     <br><span class="star-ratings">★★★★★</span></a>
             </p>
             <p>
                 <?php
-                _e('Keep in touch with me:', $this->plugin_key);
-                ?> <a href="http://parsa.ws">Parsa Kafi</a>
+                _e('Keep in touch with us:', $this->plugin_key);
+                ?> <a href="https://edaklientam.online">Eda Klientam</a>
             </p>
+        </div>
+        <?php
+    }
+    function users_settings_content()
+    {
+        global $wpdb;
+	    $count = $wpdb->get_var("select count(id) from ".$this->db_users_table);
+	    $users = $wpdb->get_results("SELECT * from ".$this->db_users_table, ARRAY_A);
+        ?>
+        <div id="<?php echo $this->usersTabID ?>-content" class="wptp-tab-content hidden">
+            <h2><?=__("Total users", $this->plugin_key);?>:<?=$count;?></h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Username</th>
+                    <th>Locale</th>
+                </tr>
+                <?php
+                foreach ($users as $user)
+                { ?>
+                    <tr>
+                        <td><?=$user['user_id'];?></td>
+                        <td><?=$user['first_name'];?></td>
+                        <td><?=$user['last_name'];?></td>
+                        <td><?php if (!empty($user['username'])) { ?>
+                            <a href="https://t.me/<?=$user['username'];?>">@<?=$user['username'];?></a>
+                            <?php } ?></td>
+                        <td><?=$user['locale'];?></td>
+                    </tr>
+                    <?php
+                } ?>
+            </table>
         </div>
         <?php
     }
@@ -257,10 +293,24 @@ class WPTelegramPro
 
     function connect_telegram_wp_user($user_text)
     {
+        global $wpdb;
         $code = $user_text;
         if (strpos($user_text, '/start') !== false) {
             $user_text = explode(' ', $user_text);
             $code = end($user_text);
+        } elseif (strpos($user_text, '/users') !== false) {
+            if (!user_can($this->user['wp_id'], 'administrator'))
+                return;
+            $users_count = $wpdb->get_var("SELECT count(id) FROM ".$this->db_users_table);
+	        $users = $wpdb->get_results("SELECT * FROM ".$this->db_users_table." ORDER BY `id` DESC LIMIT 25", ARRAY_A);
+	        $message = __("Total users", $this->plugin_key).":".$users_count."\n";
+	        foreach ($users as $user)
+            {
+                $messstr = !empty($user['username'])?"@".$user['username']."  ":"";
+                $messstr .= $user['first_name']." ".$user['last_name'];
+                $message .= $messstr."\n";
+            }
+	        $this->telegram->sendMessage($message);
         }
         if (strlen($code) == $this->rand_id_length && is_numeric($code)) {
             $user_id = $this->find_user_by_code($code);
@@ -415,9 +465,9 @@ class WPTelegramPro
             <?php echo $update_message; ?>
             <div class="nav-tab-wrapper">
                 <?php
-                $first_tab = true;
+                $first_tab = !isset($_GET['tab']);
                 foreach ($tabs_title as $tab => $label) {
-                    echo '<a id="' . $tab . '" class="wptp-tab nav-tab ' . ($first_tab ? 'nav-tab-active' : '') . '">' . $label . '</a>';
+                    echo '<a id="' . $tab . '" class="wptp-tab nav-tab ' . (($first_tab || $_GET['tab']==$tab) ? 'nav-tab-active' : '') . '">' . $label . '</a>';
                     $first_tab = false;
                 }
                 ?>
@@ -427,6 +477,14 @@ class WPTelegramPro
                 do_action('wptelegrampro_settings_content');
                 ?>
 
+                <?php
+                if (isset($_GET['tab']))
+                { ?>
+                    <script>
+                        document.getElementById("wordpress-wptp-tab-content").style.display = 'none';
+                        document.getElementById("<?=$_GET['tab']?>-content").style.display = 'block';
+                    </script>
+                    <?php } ?>
                 <button type="submit" class="button-save">
                     <span class="dashicons dashicons-yes"></span> <span><?php _e('Save') ?></span>
                 </button>
