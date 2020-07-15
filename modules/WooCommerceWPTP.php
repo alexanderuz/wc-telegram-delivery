@@ -346,13 +346,14 @@ class WooCommerceWPTP extends WPTelegramPro
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
             $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
             $text .= __('Name', $this->plugin_key) . ': *' . $order->get_billing_first_name() . "*\n";
-            $text .= __('Phone', $this->plugin_key) . ': *' . $order->get_billing_phone() . "*\n";
+            $text .= __('Phone', $this->plugin_key) . ': ' . $order->get_billing_phone() . "\n";
             if (empty($order->get_shipping_address_2()))
 	            $text .= __('Address', $this->plugin_key) . ': *' . $order->get_shipping_address_1() . "*\n";
             else
 	            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
             $text .= __('Total price', $this->plugin_key) . ': *' . $this->wc_price($order->get_total()) . "*\n";
             $text .= __('Payment method', $this->plugin_key) . ': ' . $this->get_paysystem($order->get_payment_method())['name'] . "\n";
+            $text .= __('Order time', $this->plugin_key) . ': ' .$order->get_customer_note() . "\n";
             $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
 
             foreach ($order->get_items() as $item_id => $item_data) {
@@ -408,19 +409,24 @@ class WooCommerceWPTP extends WPTelegramPro
 
     function default_paysystems($paysystems)
     {
-        $paysystems[] = array(
-                'id' => 'cash',
-                'name' => __("Cash payment 💴"),
-            'description' => __("Cash payment upon receipt"),
-
-        );
-
-        $paysystems[] = array(
-	        'id' => 'cash',
-	        'name' => __("Card payment 💳"),
-	        'description' => __("Card payment upon receipt"),
-        );
-        return $paysystems;
+	    $paysystems[] = array(
+		    'id'          => 'cash',
+		    'name'        => __( "Cash payment 💴", $this->plugin_key ),
+		    'description' => __( "Cash payment upon receipt", $this->plugin_key ),
+	    );
+	    if ($this->get_option('payment_card', 0))
+	        $paysystems[] = array(
+		    'id'          => 'card',
+		    'name'        => __( "Card payment 💳", $this->plugin_key ),
+		    'description' => __( "Card payment upon receipt", $this->plugin_key ),
+	    );
+	    if ($this->get_option('payment_payme_invoice', 0))
+		    $paysystems[] = array(
+			    'id'          => 'paymeinvoice',
+			    'name'        => __( "Payme 💰", $this->plugin_key ),
+			    'description' => __( "Payment via Paycom invoice", $this->plugin_key ),
+		    );
+	    return $paysystems;
     }
 
     function get_available_paysystems()
@@ -468,8 +474,8 @@ class WooCommerceWPTP extends WPTelegramPro
 	    else
 	        $new_keyboard[] = $this->words['product_categories'];
 	    $new_keyboard[] = $this->words['cart'];
-        if ($this->get_option('checkout_orders_in_chat',0))
-            $new_keyboard[] = $this->words['checkout'];
+//        if ($this->get_option('checkout_orders_in_chat',0))
+//            $new_keyboard[] = $this->words['checkout'];
         $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
         return $keyboard;
     }
@@ -940,6 +946,16 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
+                        <label for="enable_location"><?php _e('Enable location', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="enable_location"
+                                      name="enable_location" <?php checked($this->get_option('enable_location', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
+                        </label>
+
+                </tr>
+                <tr>
+                    <td>
                         <label for="products_per_page"><?php _e('Products Per Page', $this->plugin_key) ?></label>
                     </td>
                     <td><input type="number" name="products_per_page" id="products_per_page"
@@ -1016,6 +1032,29 @@ class WooCommerceWPTP extends WPTelegramPro
                     <td>
                         <label><input type="checkbox" value="1" id="dont_display_links"
                                       name="dont_display_links" <?php checked($this->get_option('dont_display_links', 0)) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2"><?php _e('Payments', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="payment_card"><?php _e('Card payment', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="payment_card"
+                                      name="payment_card" <?php checked($this->get_option('payment_card', 0)) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="payment_payme_invoice"><?php _e('Paycom Invoice payment', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="payment_payme_invoice"
+                                      name="payment_payme_invoice" <?php checked($this->get_option('payment_payme_invoice', 0)) ?>> <?php _e('Active', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
@@ -1557,113 +1596,247 @@ class WooCommerceWPTP extends WPTelegramPro
         return strip_tags(html_entity_decode(wc_price($price)));
     }
 
-	function checkout_process_message( $message, $state ) {
-		global $woocommerce;
-		$cart = $this->get_cart();
-		if ( $state == 4 )
-		{
-			$cart['name'] = $message;
-			$contact_keyboard = array(
-				array(
-					array(
-						'text'            => __('Send contact 📲', $this->plugin_key),
-						'request_contact' => true,
-					)
-				)
-			);
-			$contact_keyboard = $this->telegram->keyboard($contact_keyboard);
+    function checkout_request_phone() {
+	    $contact_keyboard = array(
+		    array(
+			    array(
+				    'text'            => __( 'Send contact 📲', $this->plugin_key ),
+				    'request_contact' => true,
+			    )
+		    )
+	    );
+	    $contact_keyboard = $this->telegram->keyboard( $contact_keyboard );
+	    $this->telegram->sendMessage( __( 'Input your phone or send your contact', $this->plugin_key ), $contact_keyboard );
+    }
 
-			$this->telegram->sendMessage( __( 'Input your phone or send your contact', $this->plugin_key ), $contact_keyboard );
-			$cart['state'] = 5;
-		} elseif ( $state == 5 )
-        {
-            if (is_array($message))
-            {
-                $cart['phone'] = $message['phone_number'];
-            }
-            else
-			    $cart['phone'] = $message;
-	        $location_keyboard = array(
-		        array(
-			        array(
-				        'text'            => __('Send location 📍', $this->plugin_key),
-				        'request_location' => true,
-			        )
-		        )
-	        );
-	        $location_keyboard = $this->telegram->keyboard($location_keyboard);
-			$this->telegram->sendMessage( __( 'Input your address or send location', $this->plugin_key ), $location_keyboard );
-			$cart['state'] = 6;
-		} elseif ( $state == 6 )
-        {
-            if (is_array($message)) {
-	            $cart['address1'] =  'https://www.google.ru/maps/@'.$message['latitude'].','.$message['longitude'].',15z';
-	            $cart['address2'] = serialize($message);
-            }
-            else {
-	            $cart['address1'] = $message;
-	            $cart['address2'] = '';
-            }
-            $paysystems = $this->get_available_paysystems();
-            $payment_keyboard = array();
-            $temp_row = array();
-            $c = 1;
-            foreach ($paysystems as $paysystem)
-            {
-                $temp_row[] = $paysystem['name'];
-                if ($c % 2 == 0){
-                    $payment_keyboard[] = $temp_row;
-                $temp_row = array();
+    function checkout_request_ordertype() {
+	    $ordertype_keyboard = array(
+		    array(
+			    array(
+				    'text'            => __( 'Delivery 🚛', $this->plugin_key )
+			    ),
+			    array(
+				    'text'            => __( 'Takeoff 📦', $this->plugin_key )
+			    )
+		    )
+	    );
+	    $ordertype_keyboard = $this->telegram->keyboard( $ordertype_keyboard );
+	    $this->telegram->sendMessage( __( 'Select order type: Takeoff or Delivery', $this->plugin_key ), $ordertype_keyboard );
+    }
+
+    function checkout_request_ordertime(){
+	    $ordertime_keyboard = array(
+		    array(
+			    array(
+				    'text'            => __( 'As soon as possible', $this->plugin_key )
+			    ),
+			    array(
+				    'text'            => __( 'In a hour', $this->plugin_key )
+			    ),
+                array(
+				    'text'            => __( 'In a 3 hours', $this->plugin_key )
+			    ),
+			    array(
+				    'text'            => __( 'Tomorrow', $this->plugin_key )
+			    )
+		    )
+	    );
+	    $ordertime_keyboard = $this->telegram->keyboard( $ordertime_keyboard );
+	    $this->telegram->sendMessage( __( 'Select time for your order, or type your preffered time', $this->plugin_key ), $ordertime_keyboard );
+    }
+
+    function checkout_request_location() {
+	    if ( $this->get_option( 'enable_location', 0 ) ) {
+		    $location_keyboard = array(
+			    array(
+				    array(
+					    'text'             => __( 'Send location 📍', $this->plugin_key ),
+					    'request_location' => true,
+				    )
+			    )
+		    );
+		    $location_keyboard = $this->telegram->keyboard( $location_keyboard );
+		    $this->telegram->sendMessage( __( 'Input your address or send location', $this->plugin_key ), $location_keyboard );
+	    } else {
+		    $default_keyboard = apply_filters( 'wptelegrampro_default_keyboard', array() );
+		    $default_keyboard = $this->telegram->keyboard( $default_keyboard );
+		    $this->telegram->sendMessage( __( 'Input your address', $this->plugin_key ), $default_keyboard );
+	    }
+    }
+
+    function checkout_request_paysystem() {
+	    $paysystems       = $this->get_available_paysystems();
+	    $payment_keyboard = array();
+	    $temp_row         = array();
+	    $c                = 1;
+	    foreach ( $paysystems as $paysystem ) {
+		    $temp_row[] = $paysystem['name'];
+		    if ( $c % 2 == 0 ) {
+			    $payment_keyboard[] = $temp_row;
+			    $temp_row           = array();
+		    }
+	    }
+	    if ( count( $temp_row ) ) {
+		    $payment_keyboard[] = $temp_row;
+	    }
+
+	    $payment_keyboard = $this->telegram->keyboard( $payment_keyboard );
+	    $this->telegram->sendMessage( __( 'Select payment method', $this->plugin_key ), $payment_keyboard );
+    }
+
+    function checkout_request_confirm()
+    {
+        global $woocommerce;
+        $cart = $this->get_cart();
+        $text = __('Your order:', $this->plugin_key) ."\n";
+
+        $order   = wc_create_order();
+        foreach ( $cart['items'] as $product_id => $item ) {
+            if ( $item['count'] > 0 ) {
+                $order->add_product( wc_get_product( $product_id ), $item['count'] );
+            } elseif ( isset( $item['variations'] ) ) {
+                foreach ( $item['variations'] as $variation_id => $variation ) {
+                    $order->add_product( wc_get_product( $variation_id ), $variation );
                 }
             }
-            if (count($temp_row))
-                $payment_keyboard[] = $temp_row;
+        }
 
-            $payment_keyboard = $this->telegram->keyboard($payment_keyboard);
-	        $this->telegram->sendMessage( __( 'Select payment method', $this->plugin_key ), $payment_keyboard );
-	        $cart['state'] = 7;
-		} elseif ( $state == 7) {
+        $paysystem = $this->get_paysystem($cart['paysystem']);
+        $order->set_payment_method($paysystem['name']);
+        $order->calculate_totals();
+
+        $text .= __('Name', $this->plugin_key) . ': *' . $cart['name'] . "*\n";
+        $text .= __('Phone', $this->plugin_key) . ': *' . $cart['phone'] . "*\n";
+        if (empty($cart['address2']))
+            $text .= __('Address', $this->plugin_key) . ': *' . $cart['address1'] . "*\n";
+        else
+            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
+        $text .= __('Total price', $this->plugin_key) . ': *' . $this->wc_price($order->get_total()) . "*\n";
+        $text .= __('Payment method', $this->plugin_key) . ': ' . $this->get_paysystem($cart['paysystem'])['name'] . "\n";
+        $text .= __('Order time', $this->plugin_key) . ': *' .$cart['ordertime'] . "*\n";
+        $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
+
+        foreach ($order->get_items() as $item_id => $item_data) {
+            $product = $item_data->get_product();
+            $product_name = $product->get_name();
+            $item_quantity = $item_data->get_quantity();
+            $item_total = $this->wc_price($item_data->get_total());
+            $text .= $product_name . ' × ' . $item_quantity . ' = ' . $item_total . "\n";
+        }
+
+        $text .= "*".__('Do you confirm your order?', $this->plugin_key)."*";
+        $confirm_keyboard = array(
+            array(
+                array(
+                    'text' => __('Yes', $this->plugin_key)
+                ),
+                array(
+                    'text' => __('No', $this->plugin_key)
+                )
+            )
+        );
+        $confirm_keyboard = $this->telegram->keyboard($confirm_keyboard);
+        $this->telegram->sendMessage($text, $confirm_keyboard, null, 'Markdown' );
+
+    }
+
+    function checkout_process_message( $message, $state ) {
+		global $woocommerce;
+		$cart = $this->get_cart();
+		if ( $state == 4 ) {
+			$cart['name']     = $message;
+			$this->checkout_request_phone();
+			$cart['state'] = 5;
+		} elseif ($state == 5)
+        {
+	        if (is_array($message))
+	        {
+		        $cart['phone'] = $message['phone_number'];
+	        }
+	        else
+		        $cart['phone'] = $message;
+	        $this->checkout_request_ordertype();
+	        $cart['state'] = 6;
+		} elseif ( $state == 6 )
+        {
+            if ($message == __( 'Delivery 🚛', $this->plugin_key )) {
+                $this->checkout_request_location();
+	            $cart['state'] = 7;
+            } elseif ($message == __( 'Takeoff 📦', $this->plugin_key ) ) {
+	            $cart['address1'] = __( 'Takeoff', $this->plugin_key );
+                $this->checkout_request_paysystem();
+	            $cart['state'] = 9;
+            } else
+                $this->checkout_request_ordertype();
+		} elseif ( $state == 7 ) {
+			if ( is_array( $message ) ) {
+				$cart['address1'] = 'https://www.google.ru/maps/@' . $message['latitude'] . ',' . $message['longitude'] . ',15z';
+				$cart['address2'] = serialize( $message );
+			} else {
+				$cart['address1'] = $message;
+				$cart['address2'] = '';
+			}
+			$this->checkout_request_paysystem();
+			$cart['state'] = 9;
+		} elseif ( $state == 8) {
+            $cart['ordertime'] = $message;
+            $this->checkout_request_paysystem();
+            $cart['state'] = 9;
+		} elseif ($state == 9) {
             $paysystem_id = $this->get_paysystem_id($message);
             if ($paysystem_id) {
-	            $address = array(
-		            'first_name' => $cart['name'],
-		            'last_name'  => '',
-		            'company'    => '',
-		            'email'      => '',
-		            'phone'      => $cart['phone'],
-		            'address_1'  => $cart['address1'],
-		            'address_2'  => $cart['address2'],
-		            'city'       => '',
-		            'state'      => '',
-		            'postcode'   => '',
-		            'country'    => ''
-	            );
-	            $order   = wc_create_order();
-	            $order->set_address( $address, 'billing' );
-	            $order->set_address( $address, 'shipping' );
-	            foreach ( $cart['items'] as $product_id => $item ) {
-		            if ( $item['count'] > 0 ) {
-			            $order->add_product( wc_get_product( $product_id ), $item['count'] );
-		            } elseif ( isset( $item['variations'] ) ) {
-			            foreach ( $item['variations'] as $variation_id => $variation ) {
-				            $order->add_product( wc_get_product( $variation_id ), $variation );
-			            }
-		            }
-	            }
-	            $order->set_payment_method($paysystem_id);
-	            $order->calculate_totals();
-	            $order->save();
-	            $default_keyboard = apply_filters( 'wptelegrampro_default_keyboard', array() );
-	            $default_keyboard = $this->telegram->keyboard( $default_keyboard );
+                $cart['paysystem'] = $paysystem_id;
+                $this->checkout_request_confirm();
+                $cart['state'] = 10;
+            }
+        }
+		elseif ($state == 10) {
+            if ($message == __('Yes', $this->plugin_key)) {
 
-	            $this->telegram->sendMessage( sprintf( __( 'Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key ), $order->get_id() ), $default_keyboard );
-	            do_action('wctgdeliv_request_payment', $paysystem_id, $order);
-	            do_action( 'woocommerce_thankyou', $order->get_id() );
+                $paysystem_id = $cart['paysystem'];
+                $address = array(
+                    'first_name' => $cart['name'],
+                    'last_name' => '',
+                    'company' => '',
+                    'email' => '',
+                    'phone' => $cart['phone'],
+                    'address_1' => $cart['address1'],
+                    'address_2' => $cart['address2'],
+                    'city' => '',
+                    'state' => '',
+                    'postcode' => '',
+                    'country' => ''
+                );
+                $order = wc_create_order();
+                $order->set_address($address, 'billing');
+                $order->set_address($address, 'shipping');
+                $order->set_customer_note($cart['ordertime']);
+                foreach ($cart['items'] as $product_id => $item) {
+                    if ($item['count'] > 0) {
+                        $order->add_product(wc_get_product($product_id), $item['count']);
+                    } elseif (isset($item['variations'])) {
+                        foreach ($item['variations'] as $variation_id => $variation) {
+                            $order->add_product(wc_get_product($variation_id), $variation);
+                        }
+                    }
+                }
+                $order->set_payment_method($paysystem_id);
+                $order->calculate_totals();
+                $order->save();
+                $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+                $default_keyboard = $this->telegram->keyboard($default_keyboard);
+
+                $this->telegram->sendMessage(sprintf(__('Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key), $order->get_id()), $default_keyboard);
+                do_action('wctgdeliv_request_payment', $paysystem_id, $order);
+                do_action('woocommerce_thankyou', $order->get_id());
                 $cart['state'] = 0;
                 $cart['items'] = array();
+            } else {
+                $cart['state'] = 1;
+                $this->cart();
             }
-		}
-		$this->update_user( array( 'cart' => serialize( $cart ) ) );
+        }
+        $this->update_user( array( 'cart' => serialize( $cart ) ) );
 	}
 
     function checkout($message_id = null, $refresh = false)
