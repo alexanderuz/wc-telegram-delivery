@@ -6,7 +6,7 @@ global $ContactForm7WPTP;
 
 class ContactForm7WPTP extends WPTelegramPro
 {
-    protected $cf7_fields = array('email', 'name', 'subject', 'message'),
+    protected $cf7_fields = array('email', 'name', 'subject', 'message', 'phone'),
         $cf7_prefix_field = 'wptelegrampro_',
         $cf7_message_ids = array();
     public static $instance = null;
@@ -120,6 +120,7 @@ class ContactForm7WPTP extends WPTelegramPro
         }
 
         $email = $this->wpcf7_get_value('email', $contact_form);
+        $phone = $this->wpcf7_get_value('phone', $contact_form);
         $name = $this->wpcf7_get_value('name', $contact_form);
         $subject = $this->wpcf7_get_value('subject', $contact_form);
         $message = $this->wpcf7_get_value('message', $contact_form);
@@ -145,6 +146,7 @@ class ContactForm7WPTP extends WPTelegramPro
             'from' => trim(sprintf('%s <%s>', $name, $email)),
             'from_name' => $name,
             'from_email' => $email,
+            'from_phone' => $phone,
             'message' => $message,
             'fields' => $posted_data,
             'meta' => $meta,
@@ -163,6 +165,8 @@ class ContactForm7WPTP extends WPTelegramPro
                     $text .= __('Email', $this->plugin_key) . ': ' . $email . "\n";
                 if ($name)
                     $text .= __('Name', $this->plugin_key) . ': ' . $name . "\n";
+                if ($phone)
+                    $text .= __('Phone', $this->plugin_key) . ': ' . $phone . "\n";
                 if ($subject)
                     $text .= __('Subject', $this->plugin_key) . ': ' . $subject . "\n";
                 if ($message) {
