@@ -1036,6 +1036,16 @@ class WooCommerceWPTP extends WPTelegramPro
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        <label for="order_confirm_message"><?php _e('Order confirmation message', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <textarea name="order_confirm_message" id="order_confirm_message" cols="50" class="emoji"
+                                  rows="4"><?php echo $this->get_option('order_confirm_message', '') ?></textarea>
+
+                    </td>
+                </tr>
+                <tr>
                     <th colspan="2"><?php _e('Payments', $this->plugin_key) ?></th>
                 </tr>
                 <tr>
@@ -1725,6 +1735,7 @@ class WooCommerceWPTP extends WPTelegramPro
         }
 
         $text .= "*".__('Do you confirm your order?', $this->plugin_key)."*";
+        $text .= "\n" . $this->get_option('order_confirm_message', '');
         $confirm_keyboard = array(
             array(
                 array(
