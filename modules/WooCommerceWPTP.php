@@ -30,6 +30,7 @@ class WooCommerceWPTP extends WPTelegramPro
         add_action('wptelegrampro_keyboard_response_contact', [$this, 'keyboard_response']);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 20);
         add_filter('wctgdeliv_paysystems', [$this, 'default_paysystems'],1);
+        add_action('wptelegrampro_inline_query', [$this, 'inline_query']);
 
         add_action('init', [$this, 'cart_init'], 99999);
         add_action('woocommerce_payment_complete', [$this, 'woocommerce_payment_complete']);
@@ -649,6 +650,58 @@ class WooCommerceWPTP extends WPTelegramPro
         return $tags;
     }
 
+    function inline_query($query) {
+        $inline_query_id = $query['id'];
+        $terms =         $terms = get_terms('product_cat', [
+            'hide_empty' => true,
+            'orderby' => 'parent',
+            'order' => 'DESC',
+            'exclude' => $this->get_option('wc_exclude_display_categories')
+        ]);
+        $product_category_id = 0;
+        foreach ($terms as $term)
+            if ($term->description == $query['query'])
+                $product_category_id = $term->term_id;
+
+        if ($product_category_id > 0) {
+            $products = $this->query(array('category_id' => $product_category_id, 'per_page' => 50, 'post_type' => 'product'));
+
+            $items = array();
+            foreach ( $products['product'] as $product ) {
+                $title = $product['title'];
+                $price  = $this->product_price( $product );
+                $img = $product['image'];
+                $prid = $product['ID'];
+                $item = array('type'=>'article', 'id'=>$prid, 'title' => $title, 'description' => $price, 'thumb_url' => $img,
+                    'input_message_content' => array('message_text' => 'product_detail_'.$prid));
+
+                $items[] = $item;
+            }
+
+
+        $this->telegram->sendAnswerInlineQuery($inline_query_id, $items, $this->get_option('inline_cache_time', 300));
+        }
+    }
+
+    function inline_product_detail($usertext) {
+        $msg_id = $this->telegram_input['message_id'];
+        $chat_id = $this->telegram_input['chat_id'];
+        $this->telegram->deleteMessage($msg_id, $chat_id);
+
+        $this->telegram->sendMessage($this->telegram_input);
+        $product_id = intval(end(explode('_', $usertext)));
+        if (get_post_status($product_id) === 'publish') {
+            $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
+            if ($product['product_type'] == 'variable')
+                $product = $this->load_product_variations($product);
+            $this->send_product($product);
+        } else {
+            $this->telegram->answerCallbackQuery(__('The product does not exist', $this->plugin_key));
+        }
+
+
+    }
+
     function keyboard_response($user_text)
     {
         $words = $this->words;
@@ -678,7 +731,8 @@ class WooCommerceWPTP extends WPTelegramPro
                 $this->send_products($products);
 
         } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories'] || $user_text == $words['menu']) {
-            $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'));
+            $inline = $this->get_option( 'inline_search', 0 );
+            $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'), $inline);
             $keyboard = $this->telegram->keyboard($product_category, 'inline_keyboard');
             $this->telegram->sendMessage($words['product_categories'] . ":", $keyboard);
 
@@ -688,7 +742,8 @@ class WooCommerceWPTP extends WPTelegramPro
             $this->checkout(0, false);
         } elseif ($this->get_cart()['state'] > 1) {
 	        $this->checkout_process_message($user_text, $this->get_cart()['state']);
-        }
+        } elseif (substr($user_text, 0, strlen('product_detail')) === 'product_detail')
+            $this->inline_product_detail($user_text);
     }
 
     function inline_keyboard_response($data)
@@ -953,6 +1008,24 @@ class WooCommerceWPTP extends WPTelegramPro
                                       name="enable_location" <?php checked($this->get_option('enable_location', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
                         </label>
 
+                </tr>
+                <tr>
+                    <td>
+                        <label for="inline_search"><?php _e('Inline search menu', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="inline_search"
+                                      name="inline_search" <?php checked($this->get_option('inline_search', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
+                        </label>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label for="products_per_page"><?php _e('Inline cache time', $this->plugin_key) ?></label>
+                    </td>
+                    <td><input type="number" name="inline_cache_time" id="inline_cache_time"
+                               value="<?php echo $this->get_option('inline_cache_time', 300) ?>"
+                               class="small-text ltr" min="1"></td>
                 </tr>
                 <tr>
                     <td>

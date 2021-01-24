@@ -197,6 +197,12 @@ class TelegramWPTP
         return $this->last_result = $this->request('sendMessage', $parameter);
     }
 
+    function sendAnswerInlineQuery($query_id, $items, $cache_time = 300)
+    {
+        $parameter = array('inline_query_id' => $query_id, 'results' => json_encode($items), 'cache_time' => $cache_time);
+        return $this->last_result = $this->request('answerInlineQuery', $parameter);
+    }
+
 	function sendLocation($location, $keyboard = null, $chat_id = null)
 	{
 		$chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;

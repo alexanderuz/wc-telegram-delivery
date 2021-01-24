@@ -264,6 +264,8 @@ class WPTelegramPro
 	        do_action('wptelegrampro_keyboard_response_location', $data['input']['message']['location']);
         } elseif (isset($data['input']['message']['contact'])) {
 	        do_action('wptelegrampro_keyboard_response_contact', $data['input']['message']['contact']);
+        } elseif (isset($data['input']['inline_query'])) {
+            do_action('wptelegrampro_inline_query', $data['input']['inline_query']);
         } else {
             do_action('wptelegrampro_keyboard_response', $user_text);
         }
@@ -829,7 +831,7 @@ class WPTelegramPro
      * @param array $exclude Exclude Terms, Default: array()
      * @return array|boolean Terms list with Telegram Inline Keyboard Structure
      */
-    function get_tax_keyboard($command, $taxonomy, $order_by = 'parent', $exclude = array())
+    function get_tax_keyboard($command, $taxonomy, $order_by = 'parent', $exclude = array(), $forinline = false)
     {
         $terms = get_terms($taxonomy, [
             'hide_empty' => true,
@@ -847,10 +849,17 @@ class WPTelegramPro
 		    $i = 1;
 		    $temp = array();
 		    foreach ( $terms as $term ) {
-			    $temp[] = array(
-					    'text'          => $term->name,
-					    'callback_data' => $command . '_' . $term->term_id
-			    );
+		        if ($forinline) {
+                    $temp[] = array(
+                        'text' => $term->name ." ". $term->description,
+                        'switch_inline_query_current_chat' => $term->description
+                    );
+                } else {
+                    $temp[] = array(
+                        'text' => $term->name . $term->description,
+                        'callback_data' => $command . '_' . $term->term_id
+                    );
+                }
 			    if ($i % $columns == 0)
                 {
                     $terms_r[] = $temp;
