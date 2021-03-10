@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/alexanderuz/wc-telegram-delivery
  * Description: Telegram bot for WooCommerce that accepting order with local delivery
  * Author: ALeXaNDeR ft Parsa Kafi
- * Version: 1.0.0
+ * Version: 1.3
  * Author URI: http://alexander.uz
  * Text Domain: wc-telegram-delivery
  * WC requires at least: 3.0.0
@@ -861,7 +861,7 @@ class WPTelegramPro
                     );
                 } else {
                     $temp[] = array(
-                        'text' => $term->name . $term->description,
+                        'text' => $term->name,
                         'callback_data' => $command . '_' . $term->term_id
                     );
                 }

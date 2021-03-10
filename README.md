@@ -12,6 +12,7 @@ Description
 * Display Telegram channel members count with shortcode
 * Connect WordPress profile to Telegram account
 * Two Step Telegram bot Authentication
+* Checkout orders in chat and send notifications to admins
 
 **Integrate with E-Commerce plugins:**
 * [WooCommerce](https://wordpress.org/plugins/woocommerce) – Sale products on the Telegram bot. Send product to Telegram channels. New order, Order status change, Product low/no stock, new order note notification
@@ -63,72 +64,18 @@ Useful Tools:
 
 Changelog
 -----------
-**2.0.3 2020-01-26**
-* Fixed plugin activate error
-
-**2.0.2 2020-01-23**
-* Fixed error in the addons
-
-**2.0.1 2020-01-22**
-* Fixed tags with space
-* Fixed create plugin DB table
-* Fixed duplicate plugin menu 
-
-**2.0 2020-01-19**
-* Two Step Telegram bot Authentication
-* Integrate with DoLogin Security plugin
-* Fixed error in PHP5.*
-
-**1.9**
-* Integrate with some plugins
-* New WordPress and WooCommerce notification option
-* Fix WooCommerce "Exclude Categories" and "Exclude Display Categories" option
-* Fix the problem of encoding the text sent to the telegram
-
-**1.8**
-* Add quick send to channel
-* Connect WordPress profile to Telegram account
-* WooCommerce new order and order status change notification
-* Fixed comment notification
-* Fixed problem displaying list of pattern tags.
-* Fixed warning with PHP V7.2.*
-
-**1.7.2**
-* Fixed some bugs in PHP5.*
-
-**1.7.1**
-* Add host info (IP/Location) to debugs page
-* Fixed some bugs
-
-**V 1.7**
-* Add debugs page
-* Add helps page
-* Cleans post excerpt from tags and unused shortcodes
-
-**V 1.6**
-* New option for display channels metabox base on user role
-* Add currency symbol to channel pattern tags, `{currency-symbol}`
-* Fixed some bugs
-
-**V 1.5**
-* Inline button for channel message
-* Fixed some bugs
-
-**V 1.4**
-* Delay time to send channels
-* Fixed some bugs
-
 **V 1.3**
-* Add proxy settings
+Added OpenCage support to obtain customer address
+Remaked full checkout process to increase usability
+Added translations in plugin directory
 
 **V 1.2**
-* Compatible with RTL languages
-* Add custom field and terms to pattern tags: `{cf:price}`, `{terms:taxonomy}`
-* Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
-* Admin can force update telegram keyboard
+Added inline search support
+Added phone filed when ContactForm7 message is sent
 
 **V 1.1**
-* Display Telegram channel members count with shortcode: `[channel_members_wptp channel="channel username" formatting="1"]`
+* Added ability to quick checkout in chat
+* Added some information buttons (displays pages from WP)
 
 **V 1.0**
 * Receive command from Telegram

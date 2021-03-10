@@ -470,11 +470,15 @@ class WooCommerceWPTP extends WPTelegramPro
         $new_keyboard = array();
         if ($this->get_option('products_button',0))
             $new_keyboard[] = $this->words['products'];
-	    if ($this->get_option('restaurant_mode',0))
-		    $new_keyboard[] = $this->words['menu'];
-	    else
-	        $new_keyboard[] = $this->words['product_categories'];
-	    $new_keyboard[] = $this->words['cart'];
+//        if ($this->get_option('categories_button',1)) {
+//            if ($this->get_option('restaurant_mode', 0))
+//                $new_keyboard[] = $this->words['menu'];
+//            else
+//                $new_keyboard[] = $this->words['product_categories'];
+//        }
+	    $new_keyboard[] = $this->words['order'];
+//        if ($this->get_option('cart_button',1))
+//	        $new_keyboard[] = $this->words['cart'];
 //        if ($this->get_option('checkout_orders_in_chat',0))
 //            $new_keyboard[] = $this->words['checkout'];
         $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
@@ -486,8 +490,9 @@ class WooCommerceWPTP extends WPTelegramPro
         $new_words = array(
             'products' => __('Products 📑', $this->plugin_key),
             'product_categories' => __('Product Categories 📖', $this->plugin_key),
-            'cart' => __('Cart 🛒', $this->plugin_key),
-            'checkout' => __('Checkout', $this->plugin_key),
+            'select_category' => __('Select Category', $this->plugin_key),
+            'cart' => __('Cart 📥', $this->plugin_key),
+            'checkout' => __('Checkout 🏁', $this->plugin_key),
             'cart_empty_message' => __('Your cart is empty.', $this->plugin_key),
             'confirm_empty_cart' => __('Empty Cart?', $this->plugin_key),
             'cart_emptied' => __('Cart has been empty.', $this->plugin_key),
@@ -495,6 +500,9 @@ class WooCommerceWPTP extends WPTelegramPro
             'instock' => __('In stock', $this->plugin_key),
             'outofstock' => __('Out of stock', $this->plugin_key),
             'menu' => __('Menu 🍽', $this->plugin_key),
+            'order' => __('🛍 Order', $this->plugin_key),
+            'delivery' => __('Delivery 🚛', $this->plugin_key),
+            'takeoff' => __('Takeoff 📦', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -688,7 +696,6 @@ class WooCommerceWPTP extends WPTelegramPro
         $chat_id = $this->telegram_input['chat_id'];
         $this->telegram->deleteMessage($msg_id, $chat_id);
 
-        $this->telegram->sendMessage($this->telegram_input);
         $product_id = intval(end(explode('_', $usertext)));
         if (get_post_status($product_id) === 'publish') {
             $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
@@ -699,6 +706,23 @@ class WooCommerceWPTP extends WPTelegramPro
             $this->telegram->answerCallbackQuery(__('The product does not exist', $this->plugin_key));
         }
 
+
+    }
+
+    function display_product_cats()
+    {
+        $inline = $this->get_option( 'inline_search', 0 );
+        $action_keyboard = array(array(
+            array(
+                'text' => $this->words['cart']
+            ),
+            array(
+                'text' => $this->words['checkout'],
+            )
+        ));
+        $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'), $inline);
+        $keyboard = $this->telegram->keyboard(array_merge($action_keyboard, $product_category));
+        $this->telegram->sendMessage($this->words['select_category'] . ":", $keyboard);
 
     }
 
@@ -731,19 +755,18 @@ class WooCommerceWPTP extends WPTelegramPro
                 $this->send_products($products);
 
         } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories'] || $user_text == $words['menu']) {
-            $inline = $this->get_option( 'inline_search', 0 );
-            $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'), $inline);
-            $keyboard = $this->telegram->keyboard($product_category, 'inline_keyboard');
-            $this->telegram->sendMessage($words['product_categories'] . ":", $keyboard);
-
+            $this->display_product_cats();
         } elseif ($user_text == '/cart' || $user_text == $words['cart']) {
             $this->cart();
         } elseif ($user_text == '/checkout' || $user_text == $words['checkout']) {
             $this->checkout(0, false);
-        } elseif ($this->get_cart()['state'] > 1) {
-	        $this->checkout_process_message($user_text, $this->get_cart()['state']);
-        } elseif (substr($user_text, 0, strlen('product_detail')) === 'product_detail')
+        } elseif ($user_text == '/order' || $user_text == $words['order']) {
+            $this->beginOrder(0, false);
+        } elseif (substr($user_text, 0, strlen('product_detail')) === 'product_detail') {
             $this->inline_product_detail($user_text);
+        } elseif ($this->get_cart()['order_state'] > 0) {
+	        $this->checkout_process_message($user_text, $this->get_cart()['order_state']);
+        }
     }
 
     function inline_keyboard_response($data)
@@ -948,6 +971,16 @@ class WooCommerceWPTP extends WPTelegramPro
 	        $this->checkout($message_id);
         } elseif ($this->button_data_check($button_data, 'display_cart')) {
             $this->cart();
+        } elseif ($this->button_data_check($button_data, 'cart_delete')) {
+            $button_data_ = explode('_', $button_data);
+            $product_id = $button_data_[2];
+            $message_id = $button_data_[3];
+            $cart = $this->get_cart();
+            if (isset($cart['items'][ $product_id ]))
+                unset($cart['items'][ $product_id ]);
+            $this->update_user( array( 'cart' => serialize( $cart ) ) );
+            $this->cart($message_id);
+            $this->telegram->answerCallbackQuery($this->words['refresh_cart']);
         }
     }
 
@@ -1006,6 +1039,25 @@ class WooCommerceWPTP extends WPTelegramPro
                     <td>
                         <label><input type="checkbox" value="1" id="enable_location"
                                       name="enable_location" <?php checked($this->get_option('enable_location', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
+                        </label>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label for="opencage_apikey"><?php _e('OpenCage APIKEY', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <input type="text" name="opencage_apikey" id="opencage_apikey"
+                               value="<?php echo $this->get_option('opencage_apikey', '') ?>">
+
+                </tr>
+                <tr>
+                    <td>
+                        <label for="prod_keyboard_reply"><?php _e('Products in reply keyboard', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="prod_keyboard_reply"
+                                      name="prod_keyboard_reply" <?php checked($this->get_option('prod_keyboard_reply', 0)) ?>> <?php _e('Enabled', $this->plugin_key) ?>
                         </label>
 
                 </tr>
@@ -1237,10 +1289,10 @@ class WooCommerceWPTP extends WPTelegramPro
         $keybuttons = array();
         if ($this->get_option('dont_display_links',0) != 1)
             $keybuttons[] = array('text' => '🔗️', 'url' => $product['link']);
-        $keybuttons[] = array('text' => __("⬅️", $this->plugin_key), 'callback_data' => 'product_page_current');
-        $keybuttons[] = array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+');
+//        $keybuttons[] = array('text' => __("⬅️", $this->plugin_key), 'callback_data' => 'product_page_current');
+//        $keybuttons[] = array('text' => '➕', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_+');
         $keybuttons[] = array('text' => $txtincart.' 🛒', 'callback_data' => 'display_cart');
-        $keybuttons[] = array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-');
+//        $keybuttons[] = array('text' => '➖', 'callback_data' => 'add_to_cart_' . $product['ID'] . '_' . $message_id.'_-');
         $keyboard = array($keybuttons);
 
         // Gallery Emoji Button
@@ -1422,7 +1474,7 @@ class WooCommerceWPTP extends WPTelegramPro
         }
     }
 
-    function add_to_cart($product_id, $add = null, $variation_key = null, $variation_value = null)
+    function add_to_cart($product_id, $add = null, $variation_key = null, $variation_value = null, $quantity = 1)
     {
         $cart = $this->get_cart();
 
@@ -1434,9 +1486,9 @@ class WooCommerceWPTP extends WPTelegramPro
 	    if ( $product['product_type'] == 'variable' ) {
 		    $selected_variation = $cart['items'][ $product_id ]['variation_selected'];
 		    if ( $add ) {
-			    $cart['items'][ $product_id ]['variations'][ $selected_variation ] ++;
+			    $cart['items'][ $product_id ]['variations'][ $selected_variation ] += $quantity;
 		    } else {
-			    $cart['items'][ $product_id ]['variations'][ $selected_variation ] --;
+			    $cart['items'][ $product_id ]['variations'][ $selected_variation ] -= $quantity;
 		    }
 		    if ( $cart['items'][ $product_id ]['variations'][ $selected_variation ] < 0 ) {
 			    $cart['items'][ $product_id ]['variations'][ $selected_variation ] = 0;
@@ -1444,9 +1496,9 @@ class WooCommerceWPTP extends WPTelegramPro
 	    } else {
 		    if ( is_bool( $add ) === true ) {
 			    if ( $add ) {
-				    $cart['items'][ $product_id ]['count'] ++;
+				    $cart['items'][ $product_id ]['count'] += $quantity;
 			    } else {
-				    $cart['items'][ $product_id ]['count'] --;
+				    $cart['items'][ $product_id ]['count'] -= $quantity;
 			    }
 		    }
 		    if ( $cart['items'][ $product_id ]['count'] < 0 ) {
@@ -1454,6 +1506,7 @@ class WooCommerceWPTP extends WPTelegramPro
 		    }
 	    }
 	    $this->update_user( array( 'cart' => serialize( $cart ) ) );
+	    return $cart;
     }
 
     function get_cart()
@@ -1462,7 +1515,7 @@ class WooCommerceWPTP extends WPTelegramPro
         if (empty($cart)) {
 	        $cart = array();
 	        $cart['items'] = array();
-	        $cart['state'] = 0;
+	        $cart['order_state'] = 0;
         }
         else
             $cart = unserialize($cart);
@@ -1522,12 +1575,12 @@ class WooCommerceWPTP extends WPTelegramPro
 		        if ( $caption == null ) {
 			        $caption = __( 'Selected products:' );
 		        }
-		        $keyboard = array();
+		        $keyboard = array(array(array('text' => $this->words['back']), array('text' => $this->words['cart'])));
 		        $columns  = 2;
 		        $temp     = array();
 		        foreach ( $products['product'] as $product ) {
-			        $price  = $this->product_price( $product );
-			        $text   = $product['title'] . " - " . $price;
+//			        $price  = $this->product_price( $product );
+			        $text   = $product['title'];
 			        $temp[] = array( 'text' => $text, 'callback_data' => 'product_detail_' . $product['ID'] );
 			        if ( $i % $columns == 0 ) {
 				        $keyboard[] = $temp;
@@ -1561,9 +1614,12 @@ class WooCommerceWPTP extends WPTelegramPro
 				        $keyboardn = array_reverse( $keyboardn );
 			        }
 			        $keyboard[] = $keyboardn;
-			        $keyboards  = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
-			        $this->telegram->editMessageReplyMarkup( $keyboards, $message_id );
-		        }
+			        $keyboards  = $this->telegram->keyboard( $keyboard );
+			        $this->telegram->sendMessage( $caption, $keyboards );
+		        } else {
+                    $keyboards = $this->telegram->keyboard( $keyboard );
+                    $this->telegram->sendMessage( $caption, $keyboards );
+                }
 
 	        }
             else
@@ -1653,6 +1709,31 @@ class WooCommerceWPTP extends WPTelegramPro
         $keyboard = $this->product_keyboard($product, $message_id);
         $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
         $this->telegram->editMessageReplyMarkup($keyboards, $message_id);
+
+        $numkeyboard = array (
+            array(
+                array('text' => '1'),
+                array('text' => '2'),
+                array('text' => '3')
+            ),
+            array(
+                array('text' => '4'),
+                array('text' => '5'),
+                array('text' => '6'),
+            ),
+            array(
+                array('text' => '7'),
+                array('text' => '8'),
+                array('text' => '9')
+            ),
+            array(
+                array('text' => $this->words['back']),
+                array('text' => $this->words['cart'])
+            )
+        );
+
+        $keyboard = $this->telegram->keyboard($numkeyboard);
+        $this->telegram->sendMessage(__('Select or input quantity', $this->plugin_key), $keyboard);
     }
 
     function product_price($product, $variation = 0)
@@ -1696,10 +1777,10 @@ class WooCommerceWPTP extends WPTelegramPro
 	    $ordertype_keyboard = array(
 		    array(
 			    array(
-				    'text'            => __( 'Delivery 🚛', $this->plugin_key )
+				    'text'            => $this->words['delivery']
 			    ),
 			    array(
-				    'text'            => __( 'Takeoff 📦', $this->plugin_key )
+				    'text'            => $this->words['takeoff']
 			    )
 		    )
 	    );
@@ -1812,10 +1893,10 @@ class WooCommerceWPTP extends WPTelegramPro
         $confirm_keyboard = array(
             array(
                 array(
-                    'text' => __('Yes', $this->plugin_key)
+                    'text' => $this->words['yes']
                 ),
                 array(
-                    'text' => __('No', $this->plugin_key)
+                    'text' => $this->words['no']
                 )
             )
         );
@@ -1827,55 +1908,152 @@ class WooCommerceWPTP extends WPTelegramPro
     function checkout_process_message( $message, $state ) {
 		global $woocommerce;
 		$cart = $this->get_cart();
-		if ( $state == 4 ) {
-			$cart['name']     = $message;
-			$this->checkout_request_phone();
-			$cart['state'] = 5;
-		} elseif ($state == 5)
-        {
-	        if (is_array($message))
-	        {
-		        $cart['phone'] = $message['phone_number'];
-	        }
-	        else
-		        $cart['phone'] = $message;
-	        $this->checkout_request_ordertype();
-	        $cart['state'] = 6;
-		} elseif ( $state == 6 )
-        {
-            if ($message == __( 'Delivery 🚛', $this->plugin_key )) {
+        if ($cart['order_state'] == 1) {
+            if ($message == $this->words['delivery']) {
                 $this->checkout_request_location();
-	            $cart['state'] = 7;
-            } elseif ($message == __( 'Takeoff 📦', $this->plugin_key ) ) {
-	            $cart['address1'] = __( 'Takeoff', $this->plugin_key );
-                $this->checkout_request_paysystem();
-	            $cart['state'] = 9;
+                $cart['order_state'] = 2;
+            } else if ($message == $this->words['takeoff']) {
+                $cart['order_state'] = 4;
+                $this->checkout_request_phone();
             } else
                 $this->checkout_request_ordertype();
-		} elseif ( $state == 7 ) {
-			if ( is_array( $message ) ) {
-				$cart['address1'] = 'https://www.google.ru/maps/@' . $message['latitude'] . ',' . $message['longitude'] . ',15z';
-				$cart['address2'] = serialize( $message );
-			} else {
-				$cart['address1'] = $message;
-				$cart['address2'] = '';
-			}
-			$this->checkout_request_paysystem();
-			$cart['state'] = 9;
-		} elseif ( $state == 8) {
+        } elseif ($cart['order_state'] == 2) {
+            if (is_array($message)) {
+                $cart['address1'] = $this->openCageGetAddress($message['latitude'], $message['longitude']);
+                $cart['address2'] = serialize($message);
+                $cart['address2'] = 'https://www.google.ru/maps/@' . $message['latitude'] . ',' . $message['longitude'] . ',15z';
+            } else {
+                $cart['address1'] = $message;
+                $cart['address2'] = '';
+            }
+            $confirm_keyboard = array(
+                array(
+                    array(
+                        'text'            => $this->words['yes']
+                    ),
+                    array(
+                        'text'            => $this->words['no']
+                    )
+                )
+            );
+            $confirm_keyboard = $this->telegram->keyboard($confirm_keyboard);
+            $this->telegram->sendMessage(__('Your address: ', $this->plugin_key).$cart['address1']."\n".__('Is it correct?', $this->plugin_key), $confirm_keyboard);
+            $cart['order_state'] = 3;
+        } elseif ($cart['order_state'] == 3) {
+            if ($message == $this->words['yes']) {
+                $cart['order_state'] = 4;
+                $this->checkout_request_phone();
+            } else
+            {
+                $this->checkout_request_location();
+                $cart['order_state'] = 2;
+            }
+        } elseif ($cart['order_state'] == 4) {
+            if (is_array($message))
+            {
+                $cart['phone'] = $message['phone_number'];
+            }
+            else
+                $cart['phone'] = $message;
+            $cart['order_state'] = 11;
+            $this->display_product_cats();
+        } elseif ($cart['order_state'] == 11) {
+            $terms =         $terms = get_terms('product_cat', [
+                    'name' => $message,
+                'hide_empty' => true,
+                'orderby' => 'parent',
+                'order' => 'DESC',
+                'exclude' => $this->get_option('wc_exclude_display_categories')
+            ]);
+            $product_category_id = 0;
+            $product_category = null;
+            if (sizeof($terms) > 0)
+            {
+                $product_category = $terms[0];
+                $product_category_id = $terms[0]->term_id;
+            }
+
+            if ($product_category) {
+                $cart['order_state'] = 13;
+                $this->user['page'] = 1;
+                $this->update_user(array('page' => $this->user['page']));
+                $this->update_user_meta('product_category_id', $product_category_id);
+                $products = $this->query(array('category_id' => $product_category_id, 'per_page' => $this->get_option('products_per_page', 1), 'post_type' => 'product'));
+                if ($this->get_option('simple_display',0))
+                    $this->send_products($products,0, $product_category->name.':');
+                else
+                    $this->send_products($products);
+            } else {
+                $this->telegram->sendMessage(__('Product Category Invalid!', $this->plugin_key));
+            }
+        } elseif ($cart['order_state'] == 13) {
+            $product_category_id = $this->get_user_meta('product_category_id');
+
+            if ($this->words['next_page'] == $message || $this->words['prev_page'] == $message) {
+                if ($this->words['next_page'] == $message) {
+                    $this->user['page']++;
+                } elseif ($this->words['prev_page'] == $message) {
+                    $this->user['page']--;
+                }
+                if ($this->user['page'] < 1)
+                    $this->user['page'] = 1;
+                $this->update_user(array('page' => $this->user['page']));
+                $this->display_category($product_category_id);
+            } elseif ($this->words['back'] == $message)
+            {
+                $cart['order_state'] = 11;
+                $this->display_product_cats();
+            } else {
+
+                $product = null;
+                $productfind = $this->query(array('title' => $message, 'post_type' => 'product', 'category_id' => $product_category_id));
+
+                if (isset($productfind['product']) && isset($productfind['product'][0]))
+                    $product = $productfind['product'][0];
+                if ($product) {
+                    if ($product['product_type'] == 'variable')
+                        $product = $this->load_product_variations($product);
+                    $this->update_user_meta('product_id', $product['ID']);
+                    $this->send_product($product);
+                    $cart['order_state'] = 15;
+                } else {
+                    $this->telegram->sendMessage(__('The product does not exist', $this->plugin_key));
+                }
+
+
+            }
+        } elseif ($cart['order_state'] == 15) {
+            if ($this->words['back'] == $message) {
+                $cart['order_state'] = 13;
+                $this->display_category($this->get_user_meta('product_category_id'));
+            } elseif (intval($message) > 0) {
+                $quaadd = intval($message);
+                $prod_id = $this->get_user_meta('product_id');
+
+                $can_to_cart = $this->can_to_cart($prod_id);
+                if ($can_to_cart) {
+                    $cart = $this->add_to_cart($prod_id, true, null, null, $quaadd);
+                    $cart['order_state'] = 13;
+                    $this->display_category($this->get_user_meta('product_category_id'), __('Continue order? ', $this->plugin_key));
+                }
+                else {
+                    $this->telegram->sendMessage( __('Please select product variations:', $this->plugin_key));
+                    $alert = true;
+                }
+            }
+        } elseif ($cart['order_state'] == 20) {
             $cart['ordertime'] = $message;
             $this->checkout_request_paysystem();
-            $cart['state'] = 9;
-		} elseif ($state == 9) {
+            $cart['order_state'] = 23;
+        } elseif ($cart['order_state'] == 23) {
             $paysystem_id = $this->get_paysystem_id($message);
             if ($paysystem_id) {
                 $cart['paysystem'] = $paysystem_id;
                 $this->checkout_request_confirm();
-                $cart['state'] = 10;
+                $cart['order_state'] = 29;
             }
-        }
-		elseif ($state == 10) {
-            if ($message == __('Yes', $this->plugin_key)) {
+        } elseif ($cart['order_state'] == 29) {
+                if ($message == $this->words['yes']) {
 
                 $paysystem_id = $cart['paysystem'];
                 $address = array(
@@ -1913,32 +2091,61 @@ class WooCommerceWPTP extends WPTelegramPro
                 $this->telegram->sendMessage(sprintf(__('Thank you. Your order has been placed. Order number #%s We will contact You as soon as possible', $this->plugin_key), $order->get_id()), $default_keyboard);
                 do_action('wctgdeliv_request_payment', $paysystem_id, $order);
                 do_action('woocommerce_thankyou', $order->get_id());
-                $cart['state'] = 0;
+                $cart['order_state'] = 0;
                 $cart['items'] = array();
             } else {
-                $cart['state'] = 1;
+                $cart['order_state'] = 11;
                 $this->cart();
+                $this->display_product_cats();
             }
         }
+
         $this->update_user( array( 'cart' => serialize( $cart ) ) );
 	}
+
+	function beginOrder($message_id = null, $refresh = false)
+    {
+        $cart['order_state'] = 1;
+        $this->update_user(array('cart' => serialize($cart)));
+        $this->checkout_request_ordertype();
+    }
+
+    function display_category($product_category_id, $title = null) {
+        $product_category = get_term($product_category_id, 'product_cat');
+        $products = $this->query(array('category_id' => $product_category_id, 'per_page' => $this->get_option('products_per_page', 1), 'post_type' => 'product'));
+        if ($this->get_option('simple_display',0))
+            $this->send_products($products,0, $title?$title:$product_category->name.':');
+        else
+            $this->send_products($products);
+
+    }
 
     function checkout($message_id = null, $refresh = false)
     {
         $cart = $this->get_cart();
-        $cart['state'] = 4;
-	    $this->update_user(array('cart' => serialize($cart)));
-        $this->telegram->sendMessage(__('Input your name', $this->plugin_key));
+        if (!empty($cart['items'])) {
+            $this->cart(null, true, false);
+            $cart['order_state'] = 20;
+            $this->update_user(array('cart' => serialize($cart)));
+            $this->checkout_request_ordertime();
+        }
+        else
+            $this->telegram->sendMessage($this->words['cart_empty_message']);
+
     }
 
-    function cart($message_id = null, $refresh = false)
+    function cart($message_id = null, $refresh = false, $edit = true)
     {
         $cart = $this->get_cart();
-        $result = '';
+        $result = __('Your cart:', $this->plugin_key);
         $c = 0;
         $columns = 1;
         $keyboard = $product_d = array();
         $total_amount = 0;
+//        if ($message_id == null) {
+//            $this->telegram->sendMessage($result);
+//            $message_id = $this->telegram->get_last_result()['result']['message_id'];
+//        }
         if (count($cart['items'])) {
             foreach ($cart['items'] as $product_id => $item) {
                 if (isset($item['count']) && $item['count'] >0 ) {
@@ -1947,10 +2154,18 @@ class WooCommerceWPTP extends WPTelegramPro
                     $price = $this->product_price($product);
                     $amount = $price*$item['count'];
                     $total_amount += $amount;
-                    $product_d[] = array(
-                        'text' => $c . '. ' . $product['title'] . ' ' . $item['count']." x ".$price." = ".$this->wc_price($amount),
-                        'callback_data' => 'product_detail_' . $product_id
-                    );
+                    if ($edit) {
+                        $product_d[] = array(
+                            'text' => '❌ ' . $c . '. ' . $product['title'] . ' ' . $item['count'] . " x " . $price . " = " . $this->wc_price($amount) . ' ❌',
+                            'callback_data' => 'cart_delete_' . $product_id . '_' . $message_id
+                        );
+                    }
+                    else {
+                        $product_d[] = array(
+                            'text' => $c . '. ' . $product['title'] . ' ' . $item['count'] . " x " . $price . " = " . $this->wc_price($amount),
+                            'callback_data' => 'null'
+                        );
+                    }
                     if ($c % $columns == 0) {
                         $keyboard[] = $product_d;
                         $product_d = array();
@@ -1969,8 +2184,8 @@ class WooCommerceWPTP extends WPTelegramPro
                                 $variation_name = $variation_name = $prodvar['title'];
 	                    $total_amount += $amount;
 	                    $product_d[] = array(
-		                    'text' => $c . '. ' . $product['title'] . ' - '. $variation_name.'  ' . $variation." x ".$price." = ".$this->wc_price($amount),
-		                    'callback_data' => 'product_detail_' . $product_id
+		                    'text' => '❌ '.$c . '. ' . $product['title'] . ' - '. $variation_name.'  ' . $variation." x ".$price." = ".$this->wc_price($amount). ' ❌',
+                            'callback_data' => 'cart_delete_' . $product_id . '_' . $message_id
 	                    );
 	                    if ($c % $columns == 0) {
 		                    $keyboard[] = $product_d;
@@ -1984,7 +2199,6 @@ class WooCommerceWPTP extends WPTelegramPro
 		        'text' => __('Total', $this->plugin_key) .': '. $this->wc_price($total_amount),
 		        'callback_data' => 'display_cart'
 	        );
-
             if (!empty($keyboard)) {
                 $result = __('Your cart:', $this->plugin_key);
             } else
@@ -2003,14 +2217,16 @@ class WooCommerceWPTP extends WPTelegramPro
         if (count($keyboard)) {
             if ($message_id == null)
                 $message_id = $this->telegram->get_last_result()['result']['message_id'];
-	        $keybuttons   = array();
-	        $keybuttons[] = array( 'text' => '🚮', 'callback_data' => 'confirm_empty_cart_' . $message_id );
-	        $keybuttons[] = array( 'text' => '🔄', 'callback_data' => 'refresh_cart_' . $message_id );
-	        if ( $this->get_option( 'checkout_orders_in_chat', 0 ) != 1 )
-		        $keybuttons[] = array( 'text' => '🛒', 'url' => $this->cart_url() );
-	        else
-		        $keybuttons[] = array( 'text' => '🛒', 'callback_data' => 'process_checkout_' . $message_id );
-	        $keyboard[] = $keybuttons;
+            if ($edit) {
+                $keybuttons = array();
+                $keybuttons[] = array('text' => '🚮', 'callback_data' => 'confirm_empty_cart_' . $message_id);
+                $keybuttons[] = array('text' => '🔄', 'callback_data' => 'refresh_cart_' . $message_id);
+                if ($this->get_option('checkout_orders_in_chat', 0) != 1)
+                    $keybuttons[] = array('text' => '🛒', 'url' => $this->cart_url());
+                else
+                    $keybuttons[] = array('text' => '🛒', 'callback_data' => 'process_checkout_' . $message_id);
+                $keyboard[] = $keybuttons;
+            }
             $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
             $this->telegram->editMessageReplyMarkup($keyboards, $message_id);
         }
@@ -2022,6 +2238,29 @@ class WooCommerceWPTP extends WPTelegramPro
         $url .= strpos($url, '?') === false ? '?' : '&';
         $url .= 'wptpwc=' . $this->user_field('rand_id');
         return $url;
+    }
+
+    function openCageGetAddress($lat, $lon)
+    {
+        $apikey = $this->get_option('opencage_apikey', '');
+        if (empty($apikey))
+            return $lat.', '.$lon;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.opencagedata.com/geocode/v1/json?'.
+            'q='.$lat.'+'.$lon.
+            '&key='.$apikey.
+        '&language='.$this->user['locale']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        $ocresult = json_decode($output, true);
+        $ocresults = $ocresult['results'];
+        if (!empty($ocresults))
+        {
+            return $ocresults[0]['formatted'];
+        }
+        else
+            return $lat.', '.$lon;
+
     }
 
     function cart_init()
