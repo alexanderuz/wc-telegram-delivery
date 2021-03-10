@@ -717,7 +717,7 @@ class WordPressWPTP extends WPTelegramPro
 	        $this->user['locale'] = $newlocale;
             $this->update_user_meta('update_keyboard_time', 0);
             switch_to_locale($newlocale);
-            load_plugin_textdomain($this->plugin_key);
+            load_plugin_textdomain($this->plugin_key, false, dirname(plugin_basename(__FILE__)) .'/langs');
 	        $this->words = apply_filters('wptelegrampro_words', $this->words);
 	        $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
 	        $default_keyboard = $this->telegram->keyboard($default_keyboard);

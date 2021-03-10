@@ -8,7 +8,7 @@
  * Author URI: http://alexander.uz
  * Text Domain: wc-telegram-delivery
  * WC requires at least: 3.0.0
- * WC tested up to: 3.9
+ * WC tested up to: 5.9
  */
 
 namespace wptelegrampro;
@@ -110,7 +110,7 @@ class WPTelegramPro
             'prev' => __('⬅️ Previous', $this->plugin_key),
             'next_page' => __('Next Page ➡️', $this->plugin_key),
             'prev_page' => __('⬅️ Previous Page', $this->plugin_key),
-            'back' => __('Back', $this->plugin_key),
+            'back' => __('⬅️ Back', $this->plugin_key),
             'posts' => __('Posts', $this->plugin_key),
             'search' => __('Search 🔍', $this->plugin_key),
             'categories' => __('Categories', $this->plugin_key),
@@ -141,6 +141,7 @@ class WPTelegramPro
 
     function init($bypass = false)
     {
+        load_plugin_textdomain($this->plugin_key, false, dirname(plugin_basename(__FILE__)) .'/langs');
         if (isset($_GET['wptp']) && $_GET['wptp'] == get_option('wptp-rand-url')) {
             try {
                 $this->telegram_input = $this->telegram->input();
@@ -255,7 +256,7 @@ class WPTelegramPro
         $user_text = $data['text'];
 	    if ( $this->user['locale'] ) {
 		    switch_to_locale( $this->user['locale'] );
-		    load_plugin_textdomain( $this->plugin_key );
+		    load_plugin_textdomain( $this->plugin_key, false, dirname(plugin_basename(__FILE__)) .'/langs' );
 	    }
         // When pressed inline keyboard button
         if (isset($data['data'])) {
@@ -542,6 +543,10 @@ class WPTelegramPro
             'post_type' => $query['post_type'],
             'post_status' => 'publish'
         );
+        if (isset($query['name']))
+            $args['name'] = $query['name'];
+        if (isset($query['title']))
+            $args['title'] = $query['title'];
         if (isset($query['p'])) {
             $args['p'] = $query['p'];
         } else {
