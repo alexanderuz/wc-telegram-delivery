@@ -2006,7 +2006,7 @@ class WooCommerceWPTP extends WPTelegramPro
             } else {
 
                 $product = null;
-                $productfind = $this->query(array('title' => $message, 'post_type' => 'product', 'category_id' => $product_category_id));
+                $productfind = $this->query(array('title' => $message, 'category_id' => $product_category_id, 'per_page' => 1000, 'post_type' => 'product'), 1);
 
                 if (isset($productfind['product']) && isset($productfind['product'][0]))
                     $product = $productfind['product'][0];

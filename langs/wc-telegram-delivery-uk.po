@@ -1,0 +1,2102 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-03-25 20:07+0500\n"
+"PO-Revision-Date: 2020-03-25 20:13+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: plugin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: WPTelegramPro.php:69
+msgid "WC Telegram Delivery"
+msgstr "WC Telegram Delivery"
+
+#: WPTelegramPro.php:104
+msgid "Yes ✅"
+msgstr "Да ✅"
+
+#: WPTelegramPro.php:105
+msgid "No ❌"
+msgstr "Нет ❌"
+
+#: WPTelegramPro.php:106 inc/WordPressWPTP.php:819 inc/WordPressWPTP.php:865
+#: modules/ChannelWPTP.php:585 modules/ChannelWPTP.php:635
+#: modules/ChannelWPTP.php:718 modules/WooCommerceWPTP.php:1008
+#: modules/WooCommerceWPTP.php:1018 modules/WooCommerceWPTP.php:1031
+#: modules/WooCommerceWPTP.php:1041 modules/WooCommerceWPTP.php:1051
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:39
+#: plugins/BackUpWordPressWPTP.php:43 plugins/BackWPupWPTP.php:43
+#: plugins/CalderaFormsWPTP.php:37 plugins/ContactForm7WPTP.php:41
+#: plugins/DologinWPTP.php:51 plugins/DologinWPTP.php:65
+#: plugins/EverestFormsWPTP.php:43 plugins/FormidableFormsWPTP.php:42
+#: plugins/ForminatorWPTP.php:52 plugins/GravityFormsWPTP.php:50
+#: plugins/HTMLFormsWPTP.php:44 plugins/HappyFormsWPTP.php:38
+#: plugins/IThemesSecurityWPTP.php:39 plugins/MailchimpForWPWPTP.php:46
+#: plugins/MailchimpForWPWPTP.php:56 plugins/NewsletterWPTP.php:42
+#: plugins/NewsletterWPTP.php:52 plugins/NinjaFormsWPTP.php:38
+#: plugins/QuFormWPTP.php:64 plugins/VisualFormBuilderWPTP.php:38
+#: plugins/WPFormsWPTP.php:41 plugins/WPSMSWPTP.php:38
+#: plugins/WPStatisticsWPTP.php:39 plugins/WPUserAvatarWPTP.php:38
+#: plugins/WeFormsWPTP.php:42
+msgid "Active"
+msgstr "Активен"
+
+#: WPTelegramPro.php:107 modules/ProxyWPTP.php:169
+msgid "Inactive"
+msgstr "Неактивен"
+
+#: WPTelegramPro.php:108
+msgid "Next ➡️"
+msgstr "Далее ➡️"
+
+#: WPTelegramPro.php:109
+msgid "⬅️ Previous"
+msgstr "⬅️ Назад"
+
+#: WPTelegramPro.php:110
+msgid "Next Page ➡️"
+msgstr "Вперед ➡️"
+
+#: WPTelegramPro.php:111
+msgid "⬅️ Previous Page"
+msgstr "⬅️ Назад"
+
+#: WPTelegramPro.php:112
+msgid "Back"
+msgstr "Назад"
+
+#: WPTelegramPro.php:113 inc/WordPressWPTP.php:114 inc/WordPressWPTP.php:954
+msgid "Posts"
+msgstr "Публикации"
+
+#: WPTelegramPro.php:114
+msgid "Search 🔍"
+msgstr "Поиск 🔍"
+
+#: WPTelegramPro.php:115 inc/WordPressWPTP.php:958
+msgid "Categories"
+msgstr "Категории"
+
+#: WPTelegramPro.php:116 modules/WooCommerceWPTP.php:17
+msgid "Detail"
+msgstr "Подробности"
+
+#: WPTelegramPro.php:117
+msgid "More"
+msgstr "Подробнее"
+
+#: WPTelegramPro.php:118
+msgid "The plugin requires SSL in the domain of your website!"
+msgstr "Этот плагин требует присутсвия поддержки SSL на сайте!"
+
+#: WPTelegramPro.php:119
+msgid ""
+"Welcome, Your Telegram account is successfully connected to the website."
+msgstr "Ваш Telegram аккаунт успешно привязан к сайту."
+
+#: WPTelegramPro.php:120
+msgid "Your profile was successfully disconnected from Telegram account."
+msgstr "Ваш профиль отключен от Telegram аккаунта."
+
+#: WPTelegramPro.php:121
+msgid "This profile was successfully disconnected from Telegram account."
+msgstr "Этот профиль отключен от Telegram аккаунта."
+
+#: WPTelegramPro.php:122
+msgid "No linked Telegram account to this user profile."
+msgstr "К этому пользователю не привязан Telegram аккаунт."
+
+#: WPTelegramPro.php:123
+msgid "Error in sending message"
+msgstr "Ошибка отправки сообщения"
+
+#: WPTelegramPro.php:124
+msgid "Dynamic code is required."
+msgstr "Необходим временный код."
+
+#: WPTelegramPro.php:125
+msgid "Dynamic code is not correct."
+msgstr "Неверный временный код."
+
+#: WPTelegramPro.php:126
+msgid "Dynamic code expired."
+msgstr "Временный код просрочен."
+
+#: WPTelegramPro.php:127
+msgid "Username or password is empty."
+msgstr "Логин или пароль не указан."
+
+#: WPTelegramPro.php:128
+msgid "Unknown error"
+msgstr "Неизвестаня ошибка"
+
+#: WPTelegramPro.php:129
+msgid "About 📝"
+msgstr "О нас 📝"
+
+#: WPTelegramPro.php:130
+msgid "Payment 💰"
+msgstr "Оплата 💰"
+
+#: WPTelegramPro.php:131
+msgid "Shipping 🚛"
+msgstr "Доставка 🚛"
+
+#: WPTelegramPro.php:132
+msgid "Language 🇺🇸"
+msgstr "Язык 🇷🇺"
+
+#: WPTelegramPro.php:133
+msgid "Help ❓"
+msgstr "Справка ❓"
+
+#: WPTelegramPro.php:134
+msgid "Contact us ✉️"
+msgstr "Связаться с нами ✉️"
+
+#: WPTelegramPro.php:157
+msgid "About"
+msgstr "О плагине"
+
+#: WPTelegramPro.php:167
+msgid "Default command list"
+msgstr "Список комманд по умолчанию"
+
+#: WPTelegramPro.php:180
+#, php-format
+msgid ""
+"How to set bot commands: Start %s and select your bot > \"Edit Bot\" > "
+"\"Edit Commands\" > Send text below."
+msgstr ""
+"Как настроить команды бота: Запустите %s и выберите вашего бота > \"Edit bot"
+"\" > \"Edit Commands\" И отправьте текст ниже."
+
+#: WPTelegramPro.php:200
+msgid "Integrate WordPress with Telegram"
+msgstr "Интегрировать WordPress и Telegram"
+
+#: WPTelegramPro.php:201
+msgid "Do you like WP Telegram Pro?"
+msgstr "Вам нравится WC Telegram Delivery"
+
+#: WPTelegramPro.php:204
+msgid "Give it a rating"
+msgstr "Поставьте ему оценку"
+
+#: WPTelegramPro.php:209
+msgid "Keep in touch with me:"
+msgstr "Связаться со мной"
+
+#: WPTelegramPro.php:302
+msgid "Bot Name:"
+msgstr "Имя бота:"
+
+#: WPTelegramPro.php:304
+msgid "API Token Invalid (Need to save settings)"
+msgstr "Неверный токен API (Необходимо сохранить настройки)"
+
+#: WPTelegramPro.php:319
+msgid "Welcome, Your Telegram account is successfully connected to the store."
+msgstr "Ваш Telegram аккаунт успешно привязан к магазину."
+
+#: WPTelegramPro.php:355 modules/ChannelWPTP.php:696
+msgid "New Channel"
+msgstr "Новый канал"
+
+#: WPTelegramPro.php:356
+msgid "Remove % Channel?"
+msgstr "Удалить канал %?"
+
+#: WPTelegramPro.php:382
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+#: WPTelegramPro.php:429
+msgid "Save"
+msgstr "Сохранить"
+
+#: WPTelegramPro.php:823
+msgid "Full"
+msgstr "Полный"
+
+#: WPTelegramPro.php:825
+msgid "Crop"
+msgstr "Обрезаный"
+
+#: WPTelegramPro.php:1041
+msgid "Every % Minutes"
+msgstr "Каждые % минут"
+
+#: WPTelegramPro.php:1126 modules/DebugsWPTP.php:13
+msgid "Debugs"
+msgstr "Отладка"
+
+#: WPTelegramPro.php:1127 inc/HelpsWPTP.php:13
+msgid "Helps"
+msgstr "Справка"
+
+#: WPTelegramPro.php:1128
+msgid "Settings"
+msgstr "Настройки"
+
+#: WPTelegramPro.php:1147 modules/ChannelWPTP.php:83
+msgid "Telegram Channel"
+msgstr "Telegram канал"
+
+#: inc/Users.php:139 inc/Users.php:205
+msgid "Dynamic Code"
+msgstr "Временный код"
+
+#: inc/Users.php:151 plugins/DologinWPTP.php:258
+#, php-format
+msgid "Sent dynamic code to this Telegram account @%s."
+msgstr "Временный код отправлен для Telegram аккаунта @%s."
+
+#: inc/Users.php:201
+msgid "Telegram Authentication"
+msgstr "Авторизация через Telegram"
+
+#: inc/Users.php:225
+msgid "Two step Telegram bot authentication is on"
+msgstr "Двухфакторная авторизация включена"
+
+#: inc/Users.php:241 inc/WordPressWPTP.php:225 plugins/DologinWPTP.php:280
+#, php-format
+msgid "Dear %s"
+msgstr "Уважаемый %s"
+
+#: inc/Users.php:248 inc/WordPressWPTP.php:234 plugins/DologinWPTP.php:287
+msgid "Display website"
+msgstr "Показать сайт"
+
+#: inc/WordPressWPTP.php:71 modules/WooCommerceWPTP.php:397
+msgid "Connect to Telegram"
+msgstr "Подключение к Telegram"
+
+#: inc/WordPressWPTP.php:84 modules/ChannelWPTP.php:52
+#: plugins/BackUpWordPressServiceWPTP.php:32
+#: plugins/BackUpWordPressServiceWPTP.php:70
+msgid "Telegram"
+msgstr "Telegram"
+
+#: inc/WordPressWPTP.php:88
+msgid "This profile has been linked to this Telegram account:"
+msgstr "Этот профиль привязан к аккаунту Telegram:"
+
+#: inc/WordPressWPTP.php:88 modules/WooCommerceWPTP.php:393
+msgid "Disconnect"
+msgstr "Отключить"
+
+#: inc/WordPressWPTP.php:93
+msgid "Telegram Bot Code"
+msgstr "Код Telegram бота"
+
+#: inc/WordPressWPTP.php:99 modules/WooCommerceWPTP.php:403
+msgid "Or"
+msgstr "Или"
+
+#: inc/WordPressWPTP.php:99 modules/WooCommerceWPTP.php:403
+msgid "Request Connect"
+msgstr "Запрос подключения"
+
+#: inc/WordPressWPTP.php:101 modules/WooCommerceWPTP.php:398
+msgid "Send this code from telegram bot to identify the your user."
+msgstr "Отправьте этот код боту через Telegram чтобы идентифицировать себя."
+
+#: inc/WordPressWPTP.php:113
+msgid "Start Bot"
+msgstr "Запуск бота"
+
+#: inc/WordPressWPTP.php:115
+msgid "Categories List"
+msgstr "Список категорий"
+
+#: inc/WordPressWPTP.php:116 inc/WordPressWPTP.php:914
+msgid "Search"
+msgstr "Поиск"
+
+#: inc/WordPressWPTP.php:165
+msgid "Set Webhook Successfully."
+msgstr "Webhook успешно включен."
+
+#: inc/WordPressWPTP.php:169
+msgid "Set Webhook with Error!"
+msgstr "Webhook не установлен из за ошибки!"
+
+#: inc/WordPressWPTP.php:192
+msgid "WordPress Tags"
+msgstr "Теги WordPress"
+
+#: inc/WordPressWPTP.php:194
+msgid "The ID of this post"
+msgstr "ID публикации"
+
+#: inc/WordPressWPTP.php:195
+msgid "The title of this post"
+msgstr "Заголовок публикации"
+
+#: inc/WordPressWPTP.php:196
+msgid "The Slug of this post"
+msgstr "Идентификатор публикации"
+
+#: inc/WordPressWPTP.php:197
+msgid "The first 55 words of this post"
+msgstr "Первые 55 слов публикации"
+
+#: inc/WordPressWPTP.php:198
+msgid "The whole content of this post"
+msgstr "Полное содержимое публикации"
+
+#: inc/WordPressWPTP.php:199
+msgid "The display name of author of this post"
+msgstr "Показать имя автора публикации"
+
+#: inc/WordPressWPTP.php:200
+msgid "The permalink of this author posts"
+msgstr "Ссылка на автора публикации"
+
+#: inc/WordPressWPTP.php:201
+msgid "The permalink of this post"
+msgstr "Ссылка на публикацию"
+
+#: inc/WordPressWPTP.php:202
+msgid "The short url of this post"
+msgstr "Короткий URL этой публикации"
+
+#: inc/WordPressWPTP.php:203
+msgid ""
+"The tags of this post. Tags are automatically converted to Telegram hashtags"
+msgstr "Теги публикации. Теги автоматически конвертируются в хэештеги Telegram"
+
+#: inc/WordPressWPTP.php:204
+msgid ""
+"The categories of this post. Categories are automatically separated by | "
+"symbol"
+msgstr "Категории публикации. Категории автоматически разделяются | символом"
+
+#: inc/WordPressWPTP.php:205
+msgid "The featured image URL"
+msgstr "Ссылка на изображение"
+
+#: inc/WordPressWPTP.php:206
+msgid "The custom field of this post, Example {cf:price}"
+msgstr "Настраиваемое поле публикации, например: {cf:price}"
+
+#: inc/WordPressWPTP.php:207
+msgid ""
+"The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}"
+msgstr ""
+"Правила таксономии публикации: {terms:taxonomy}, Например: {terms:category}"
+
+#: inc/WordPressWPTP.php:208
+msgid ""
+"IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}"
+msgstr ""
+"Условие IF для настраиваемого поля, например {if='cf:price'}Цена: {cf:price}"
+"{/if}"
+
+#: inc/WordPressWPTP.php:227
+#, php-format
+msgid ""
+"Your successful login to %1$s account on date %2$s at %3$s with %4$s IP "
+"address done."
+msgstr "Вы успешно вошли в аккаунт %1$s, %2$s на %3$s с адреса %4$s."
+
+#: inc/WordPressWPTP.php:271 inc/WordPressWPTP.php:909
+msgid "User login"
+msgstr "Логин"
+
+#: inc/WordPressWPTP.php:273 inc/WordPressWPTP.php:370
+msgid "User name"
+msgstr "Имя пользователя"
+
+#: inc/WordPressWPTP.php:274 inc/WordPressWPTP.php:371
+#: modules/WooCommerceWPTP.php:348 plugins/ContactForm7WPTP.php:165
+#: plugins/NewsletterWPTP.php:79 plugins/WPSMSWPTP.php:55
+msgid "Name"
+msgstr "Имя"
+
+#: inc/WordPressWPTP.php:275 inc/WordPressWPTP.php:376
+msgid "User IP"
+msgstr "IP пользователя"
+
+#: inc/WordPressWPTP.php:277 inc/WordPressWPTP.php:378
+#: modules/WooCommerceWPTP.php:100 modules/WooCommerceWPTP.php:137
+#: modules/WooCommerceWPTP.php:180 modules/WooCommerceWPTP.php:219
+#: modules/WooCommerceWPTP.php:270 modules/WooCommerceWPTP.php:346
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:62
+#: plugins/BackUpWordPressWPTP.php:124 plugins/BackWPupWPTP.php:70
+#: plugins/CalderaFormsWPTP.php:114 plugins/ContactForm7WPTP.php:173
+#: plugins/EverestFormsWPTP.php:103 plugins/FormidableFormsWPTP.php:110
+#: plugins/ForminatorWPTP.php:104 plugins/GravityFormsWPTP.php:164
+#: plugins/HTMLFormsWPTP.php:93 plugins/HappyFormsWPTP.php:99
+#: plugins/IThemesSecurityWPTP.php:55 plugins/MailchimpForWPWPTP.php:113
+#: plugins/NewsletterWPTP.php:82 plugins/NinjaFormsWPTP.php:90
+#: plugins/QuFormWPTP.php:151 plugins/VisualFormBuilderWPTP.php:135
+#: plugins/WPCerberSecurityWPTP.php:85 plugins/WPFormsWPTP.php:101
+#: plugins/WPSMSWPTP.php:58 plugins/WPStatisticsWPTP.php:65
+#: plugins/WPUserAvatarWPTP.php:73 plugins/WeFormsWPTP.php:111
+#: plugins/WordfenceWPTP.php:133
+msgid "Date"
+msgstr "Дата"
+
+#: inc/WordPressWPTP.php:299 inc/WordPressWPTP.php:411
+#: modules/WooCommerceWPTP.php:347
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:57
+#: plugins/ContactForm7WPTP.php:163 plugins/MailchimpForWPWPTP.php:112
+#: plugins/NewsletterWPTP.php:80 plugins/WordfenceWPTP.php:167
+msgid "Email"
+msgstr "Email"
+
+#: inc/WordPressWPTP.php:299
+msgid "emailed"
+msgstr "отправлено"
+
+#: inc/WordPressWPTP.php:299
+msgid "email"
+msgstr "email"
+
+#: inc/WordPressWPTP.php:299
+msgid "notification"
+msgstr "уведомление"
+
+#: inc/WordPressWPTP.php:368 inc/WordPressWPTP.php:899
+msgid "Register a new user"
+msgstr "Зарегистрироваться как новый пользователь"
+
+#: inc/WordPressWPTP.php:372
+msgid "User role"
+msgstr "Роль пользователя"
+
+#: inc/WordPressWPTP.php:407
+msgid "New Comment"
+msgstr "Новый комментарий"
+
+#: inc/WordPressWPTP.php:408
+msgid "Post"
+msgstr "Публикация"
+
+#: inc/WordPressWPTP.php:409
+msgid "Author"
+msgstr "Автор"
+
+#: inc/WordPressWPTP.php:413
+msgid "Website"
+msgstr "Сайт"
+
+#: inc/WordPressWPTP.php:415
+msgid "Comment"
+msgstr "Комментарий"
+
+#: inc/WordPressWPTP.php:522 modules/WooCommerceWPTP.php:1469
+msgid "Your request without result!"
+msgstr "Ваш запрос не дал результатов!"
+
+#: inc/WordPressWPTP.php:552
+msgid "Welcome!"
+msgstr "Добро пожаловать!"
+
+#: inc/WordPressWPTP.php:558
+msgid "Enter word for search:"
+msgstr "Введите запрос для поска:"
+
+#: inc/WordPressWPTP.php:618
+msgid ""
+"To contact us write message to:\n"
+" @"
+msgstr ""
+"Чтобы связаться с нами напишите сюда:\n"
+" @"
+
+#: inc/WordPressWPTP.php:629
+msgid "Select language:"
+msgstr "Выберите язык:"
+
+#: inc/WordPressWPTP.php:644 modules/WooCommerceWPTP.php:836
+msgid "Page"
+msgstr "Страница"
+
+#: inc/WordPressWPTP.php:666 modules/WooCommerceWPTP.php:845
+msgid "Category"
+msgstr "Категория"
+
+#: inc/WordPressWPTP.php:670
+msgid "Post Category Invalid!"
+msgstr "Неверная категория!"
+
+#: inc/WordPressWPTP.php:679
+msgid "New Status:"
+msgstr "Новый статус:"
+
+#: inc/WordPressWPTP.php:682
+msgid "Trash"
+msgstr "Корзина"
+
+#: inc/WordPressWPTP.php:685
+msgid "Restore from Trash"
+msgstr "Убрать из корзины"
+
+#: inc/WordPressWPTP.php:688
+msgid "Unapprove"
+msgstr "Снять одобрение"
+
+#: inc/WordPressWPTP.php:690
+msgid "Approve"
+msgstr "Одобрить"
+
+#: inc/WordPressWPTP.php:692
+msgid "Spam"
+msgstr "Спам"
+
+#: inc/WordPressWPTP.php:700
+msgid "Not Found Comment!"
+msgstr "Комментарий не найден!"
+
+#: inc/WordPressWPTP.php:710
+msgid "Success"
+msgstr "Успешно"
+
+#: inc/WordPressWPTP.php:711
+msgid "Language successfully set"
+msgstr "Язык успешно изменен"
+
+#: inc/WordPressWPTP.php:717 modules/DebugsWPTP.php:120
+#: modules/DebugsWPTP.php:129
+msgid "WordPress"
+msgstr "WordPress"
+
+#: inc/WordPressWPTP.php:729
+msgid "Telegram Bot API Token"
+msgstr "Токен Telegram Bot API"
+
+#: inc/WordPressWPTP.php:742
+msgid "Posts Per Page"
+msgstr "Публикаций на страницу"
+
+#: inc/WordPressWPTP.php:750
+msgid "Image Size"
+msgstr "Размер картинки"
+
+#: inc/WordPressWPTP.php:755
+msgid "Pages"
+msgstr "Страницы"
+
+#: inc/WordPressWPTP.php:759
+msgid "Help page"
+msgstr "Страница справки"
+
+#: inc/WordPressWPTP.php:765
+msgid "About page"
+msgstr "О плагине"
+
+#: inc/WordPressWPTP.php:771
+msgid "Payment page"
+msgstr "Страница платежей"
+
+#: inc/WordPressWPTP.php:777
+msgid "Shipping page"
+msgstr "Доставка 🚛"
+
+#: inc/WordPressWPTP.php:782
+msgid "Messages"
+msgstr "Сообщения"
+
+#: inc/WordPressWPTP.php:786
+msgid "Start Command<br>(Welcome Message)"
+msgstr "Стартовая команда<br>(Приветственное сообщение)"
+
+#: inc/WordPressWPTP.php:790
+#, php-format
+msgid "Welcome to %s"
+msgstr "Добро пожаловать в %s"
+
+#: inc/WordPressWPTP.php:795
+msgid "Available locales<br>(chat languages, NOT site)"
+msgstr "Доступные языки<br>(языки чата, НЕ САЙТА)"
+
+#: inc/WordPressWPTP.php:799
+msgid "🇺🇸|en_US"
+msgstr "🇷🇺|ru_RU"
+
+#: inc/WordPressWPTP.php:804
+msgid "Contact person<br>(without @)"
+msgstr "Контакт для связи<br>(без @)"
+
+#: inc/WordPressWPTP.php:811 inc/WordPressWPTP.php:905
+msgid "Users"
+msgstr "Пользователи"
+
+#: inc/WordPressWPTP.php:815
+msgid "Telegram Connectivity"
+msgstr "Связь с Telegram"
+
+#: inc/WordPressWPTP.php:822
+msgid ""
+"Enable the ability to connect the WordPress profile to the Telegram account. "
+"This feature is displayed in the user profile, Admin bar, and WooCommerce "
+"account details."
+msgstr ""
+"Включить возможность привязывать аккаунт WordPress к аккаунту Telegram. Эта "
+"функция будет отображаться в профиле пользователя, АдминБаре и в аккаунте "
+"WooCommerce."
+
+#: inc/WordPressWPTP.php:828
+msgid "Successful connect message"
+msgstr "Сообщение успешного подключения"
+
+#: inc/WordPressWPTP.php:838
+msgid "Disconnect message"
+msgstr "Сообщение об отключении"
+
+#: inc/WordPressWPTP.php:848
+msgid "Two factor auth"
+msgstr "Двухфакторная авторизация"
+
+#: inc/WordPressWPTP.php:852
+msgid "Enable Two Step Telegram bot Auth"
+msgstr "Включить Двухфакторную авторизация через бота"
+
+#: inc/WordPressWPTP.php:855
+msgid ""
+"Verify text code for each login attempt. Users need to setup the Telegram "
+"account in their profile. To ensure no conflict with other plugins, Disable "
+"other Two step authentication."
+msgstr ""
+
+#: inc/WordPressWPTP.php:861 plugins/DologinWPTP.php:61
+msgid "Force Telegram bot auth validation"
+msgstr "Всегда использовать валидацию через бота"
+
+#: inc/WordPressWPTP.php:868 plugins/DologinWPTP.php:68
+msgid ""
+"If enabled this, any user without linked Telegram account in profile will "
+"not be able to login."
+msgstr ""
+"Если включить это, то все пользователи у кого не привязан аккаунт Telegram "
+"не смогут войти."
+
+#: inc/WordPressWPTP.php:871 plugins/DologinWPTP.php:72
+msgid ""
+"You need to setup your Telegram Connectivity before enabling this setting to "
+"avoid yourself being blocked from next time login."
+msgstr ""
+"Вам необходимо сначала настроить связь с Telegram для того чтобы избежать "
+"блокировки себя при следующем входе."
+
+#: inc/WordPressWPTP.php:872 plugins/DologinWPTP.php:73
+msgid "Click here to connect the WordPress profile to the Telegram account"
+msgstr "Нажмите здесь чтобы привязать аккаунт WordPress к аккаунту Telegram"
+
+#: inc/WordPressWPTP.php:879 modules/WooCommerceWPTP.php:962
+#: plugins/BackUpWordPressServiceWPTP.php:37
+msgid "Notification"
+msgstr "Уведомление"
+
+#: inc/WordPressWPTP.php:883 modules/WooCommerceWPTP.php:966
+msgid "Administrators"
+msgstr "Администраторы"
+
+#: inc/WordPressWPTP.php:887
+msgid "Trying to send recovery mode (PHP errors) notification"
+msgstr "Пробуем отправить в рекавери (ошибки PHP) уведомление"
+
+#: inc/WordPressWPTP.php:890
+msgid "Auto core update"
+msgstr ""
+
+#: inc/WordPressWPTP.php:893
+msgid "New comment"
+msgstr "Новый комментарий"
+
+#: inc/WordPressWPTP.php:896
+msgid "Users login"
+msgstr "Логин"
+
+#: inc/WordPressWPTP.php:918
+msgid "Post Type"
+msgstr "Тип публикации"
+
+#: inc/WordPressWPTP.php:931
+msgid "Telegram Keyboard"
+msgstr "Клавиатура Telegram"
+
+#: inc/WordPressWPTP.php:935
+msgid "Force update keyboard"
+msgstr "Обновить клавиатуру сейчас"
+
+#: inc/WordPressWPTP.php:940 modules/DebugsWPTP.php:165
+msgid "Update"
+msgstr "Обновить"
+
+#: inc/WordPressWPTP.php:943
+msgid ""
+"You should update keyboard for users when change WordPress language, active "
+"Woocommerce plugin, search setting changed. (Status don't save)"
+msgstr ""
+"Вам необходимо обнволять клавиатуру для пользователей если вы изменили язык "
+"WordPress, активировали плагин  Woocommerce или изменили настройки поиска "
+"(Галочка не сохраняется)"
+
+#: inc/WordPressWPTP.php:949
+msgid "Display buttons"
+msgstr "Показывать кнопки"
+
+#: modules/ChannelWPTP.php:45 modules/ChannelWPTP.php:460
+msgid "Send to Channel"
+msgstr "Отправить в канал"
+
+#: modules/ChannelWPTP.php:87
+msgid ""
+"Telegram channel is a great way for attracting people to your site.<br> This "
+"option allows you to send posts to your Telegram channel."
+msgstr ""
+"Telegram канал - отличный способ приобщить пользователей к вашему сайту.<br> "
+"Эта опция позволяет отправлять публикации в канал Telegram."
+
+#: modules/ChannelWPTP.php:90
+msgid "Create a channel (if you don't already have one)."
+msgstr "Создайте канал (если вы еще не сделали этого)."
+
+#: modules/ChannelWPTP.php:91
+msgid "Create a bot (if you don't already have one)."
+msgstr "Создайте бота (если вы еще не сделали этого)."
+
+#: modules/ChannelWPTP.php:92
+msgid "Go to channel options and select 'Administrator' option."
+msgstr "В настройках канала включить опцию 'Администратор'"
+
+#: modules/ChannelWPTP.php:93
+msgid "Select 'Add Administrator' option."
+msgstr "Выберите 'Добавить администратора'"
+
+#: modules/ChannelWPTP.php:94
+msgid "Search the username of your bot and add it as administrator."
+msgstr ""
+"Укажите имя пользователя Вашего бота чтобы сделать его администратором."
+
+#: modules/ChannelWPTP.php:95
+msgid "Allow 'Post Messages' Permission"
+msgstr "Включите разрешение \"Отправлять сообщения\""
+
+#: modules/ChannelWPTP.php:96
+msgid "Enter the username of the channel and hit SAVE button!!!"
+msgstr "Введите username Вашего канала и нажмите кнопку Сохранить!!!"
+
+#: modules/ChannelWPTP.php:97
+msgid ""
+"Yes! Now, whenever you publish or update a post you can choose whether send "
+"it to Telegram (from post editor page)"
+msgstr ""
+
+#: modules/ChannelWPTP.php:467 modules/ChannelWPTP.php:499
+#: modules/ChannelWPTP.php:751 modules/DebugsWPTP.php:86
+#: modules/DebugsWPTP.php:94
+msgid "Yes"
+msgstr "Да"
+
+#: modules/ChannelWPTP.php:472 modules/ChannelWPTP.php:504
+#: modules/DebugsWPTP.php:86 modules/DebugsWPTP.php:94
+msgid "No"
+msgstr "Нет"
+
+#: modules/ChannelWPTP.php:479 modules/ChannelWPTP.php:734
+msgid "Message Pattern"
+msgstr "Шаблон сообщения"
+
+#: modules/ChannelWPTP.php:492
+msgid "Attache featured Image"
+msgstr "Приложить изображение"
+
+#: modules/ChannelWPTP.php:525
+msgid "[Set 'channel' attribute]"
+msgstr ""
+
+#: modules/ChannelWPTP.php:538
+msgid "[API Token or Channel Username Invalid]"
+msgstr ""
+
+#: modules/ChannelWPTP.php:551
+msgid "Channel Member Count:"
+msgstr "Количество пользователей канала:"
+
+#: modules/ChannelWPTP.php:553
+msgid ""
+"API Token or Channel Username Invalid, It may not have access to the "
+"channel! (Read Help)"
+msgstr ""
+"API Token или Username канала неверен, это может повлечь недоступность "
+"канала! (Читайте справку)"
+
+#: modules/ChannelWPTP.php:567
+msgid "Channel"
+msgstr "Канал"
+
+#: modules/ChannelWPTP.php:580
+msgid "Send to Channels"
+msgstr "Отправить в каналы"
+
+#: modules/ChannelWPTP.php:591
+msgid "Check send every"
+msgstr "Проверять каждвые"
+
+#: modules/ChannelWPTP.php:597 modules/ChannelWPTP.php:610
+#: plugins/WordfenceWPTP.php:116
+msgid "Minutes"
+msgstr "Минуты"
+
+#: modules/ChannelWPTP.php:599
+#, php-format
+msgid "Work with <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
+msgstr "Работает с <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
+
+#: modules/ChannelWPTP.php:605
+msgid "Delay in send"
+msgstr "Задержка при отправке"
+
+#: modules/ChannelWPTP.php:611
+msgid "Least 5 minutes recommended."
+msgstr "Рекомендуется менее 5 минут."
+
+#: modules/ChannelWPTP.php:616
+msgid "Display Metabox for"
+msgstr "Отображать метабокс для"
+
+#: modules/ChannelWPTP.php:629
+msgid "Enable Quick Send"
+msgstr "Разрешить быструю отправку"
+
+#: modules/ChannelWPTP.php:637
+msgid ""
+"Display Telegram column in admin post type archive (Requires the metabox "
+"display access)."
+msgstr ""
+
+#: modules/ChannelWPTP.php:684
+msgid "Add Channel"
+msgstr "Добавить канал"
+
+#: modules/ChannelWPTP.php:701
+msgid "Channel Username"
+msgstr "Имя пользователя канала"
+
+#: modules/ChannelWPTP.php:713
+msgid "Send to channel (Default)"
+msgstr "Отправить в канал (по умолчанию)"
+
+#: modules/ChannelWPTP.php:723
+msgid "Active on PostType"
+msgstr "Активен"
+
+#: modules/ChannelWPTP.php:746
+msgid "With featured image?"
+msgstr "Вмессте с изображением"
+
+#: modules/ChannelWPTP.php:757
+msgid "Formatting messages"
+msgstr "Форматирование сообщений"
+
+#: modules/ChannelWPTP.php:760
+msgid ""
+"Telegram supports basic markdown and some HTML tags (bold, italic, inline "
+"links). By checking one of the following options, your messages will be "
+"compatible with Telegram format."
+msgstr ""
+
+#: modules/ChannelWPTP.php:762
+msgid "Telegram Bot API"
+msgstr "Telegram Bot API"
+
+#: modules/ChannelWPTP.php:766
+msgid "Simple"
+msgstr "Простой"
+
+#: modules/ChannelWPTP.php:767
+msgid "Markdown"
+msgstr "Разметка"
+
+#: modules/ChannelWPTP.php:768
+msgid "HTML"
+msgstr "HTML"
+
+#: modules/ChannelWPTP.php:774
+msgid "Excerpt length"
+msgstr "Длина товара"
+
+#: modules/ChannelWPTP.php:780
+msgid "Word"
+msgstr "Слово"
+
+#: modules/ChannelWPTP.php:785
+msgid "Inline button title"
+msgstr "Заголовок кнопки"
+
+#: modules/ChannelWPTP.php:795
+msgid "Web page preview in messages"
+msgstr "Предпросмотр страниц в сообщении"
+
+#: modules/ChannelWPTP.php:800
+msgid "Disable"
+msgstr "Выключено"
+
+#: modules/ChannelWPTP.php:833
+msgid "- Select a Tag -"
+msgstr "- Выберите тэг -"
+
+#: modules/DebugsWPTP.php:57
+msgid "Host Location"
+msgstr "Размещение хоста"
+
+#: modules/DebugsWPTP.php:60 modules/DebugsWPTP.php:102
+msgid "Tip"
+msgstr "Подсказка"
+
+#: modules/DebugsWPTP.php:60
+msgid ""
+"Your website host location on the list of countries that have filtered the "
+"telegram. For this reason, the plugin may not work well. My suggestion is to "
+"use a host of another countries."
+msgstr ""
+"Хост вашего сайта находится в стране которая в списке стран фильтрующих "
+"Telegram. По этой причине плагин может работать некорректно. Рекомендуется "
+"использовать хост в других странах."
+
+#: modules/DebugsWPTP.php:61
+msgid "Host"
+msgstr "Хост"
+
+#: modules/DebugsWPTP.php:76 modules/WooCommerceWPTP.php:345
+msgid "Status"
+msgstr "Статус"
+
+#: modules/DebugsWPTP.php:85
+msgid "Issuer"
+msgstr "Издатель"
+
+#: modules/DebugsWPTP.php:86
+msgid "Valid"
+msgstr "Валидный"
+
+#: modules/DebugsWPTP.php:89
+msgid "Valid from"
+msgstr "Валидный с"
+
+#: modules/DebugsWPTP.php:92
+msgid "Valid until"
+msgstr "Валидный по"
+
+#: modules/DebugsWPTP.php:94
+msgid "Is expired"
+msgstr "Истек"
+
+#: modules/DebugsWPTP.php:95
+msgid "Remaining days to expiration"
+msgstr "Осталось дней до истечения"
+
+#: modules/DebugsWPTP.php:96
+msgid "Key"
+msgstr "Ключ"
+
+#: modules/DebugsWPTP.php:98
+msgid "SSL Info"
+msgstr "Инфо SSL"
+
+#: modules/DebugsWPTP.php:121 plugins/WordfenceWPTP.php:163
+msgid "Version"
+msgstr "Версия"
+
+#: modules/DebugsWPTP.php:122
+msgid "Debugging Mode"
+msgstr "Режим отладки"
+
+#: modules/DebugsWPTP.php:123 modules/WooCommerceWPTP.php:351
+#: modules/WooCommerceWPTP.php:353
+msgid "Address"
+msgstr "Адрес"
+
+#: modules/DebugsWPTP.php:124
+msgid "Language"
+msgstr "Язык"
+
+#: modules/DebugsWPTP.php:125
+msgid "Character encoding"
+msgstr "Кодировка символов"
+
+#: modules/DebugsWPTP.php:126
+msgid "Text Direction"
+msgstr "Направление текста"
+
+#: modules/DebugsWPTP.php:129
+msgid "Site Health"
+msgstr "Здоровье сайта"
+
+#: modules/DebugsWPTP.php:129
+msgid "Check site health page"
+msgstr "Страница проверки здоровья сайта"
+
+#: modules/DebugsWPTP.php:143
+msgid "PHP Version"
+msgstr "Версия PHP"
+
+#: modules/DebugsWPTP.php:144
+msgid "PHP CURL"
+msgstr "Версия CURL"
+
+#: modules/DebugsWPTP.php:160
+msgid "Plugin Version"
+msgstr "Версия плагина"
+
+#: modules/DebugsWPTP.php:161
+msgid "Plugin DB Table Created"
+msgstr "БД плагина создана"
+
+#: modules/DebugsWPTP.php:165
+msgid "Update to the new version"
+msgstr "Обновить до новой версии"
+
+#: modules/PluginsWPTP.php:134
+msgid "Plugins"
+msgstr "Плагины"
+
+#: modules/ProxyWPTP.php:147 modules/ProxyWPTP.php:164
+msgid "Proxy"
+msgstr "Прокси"
+
+#: modules/ProxyWPTP.php:160
+msgid "DISCLAIMER"
+msgstr "Дисклеймер"
+
+#: modules/ProxyWPTP.php:161
+msgid "Use the proxy at your own risk!"
+msgstr "Используйте прокси на свой риск и страх."
+
+#: modules/ProxyWPTP.php:173 modules/ProxyWPTP.php:286
+msgid "Google Script"
+msgstr "Google Script"
+
+#: modules/ProxyWPTP.php:177
+msgid "PHP Proxy"
+msgstr "PHP Прокси"
+
+#: modules/ProxyWPTP.php:188
+msgid "Google Script URL"
+msgstr "Ссылка на Google Script"
+
+#: modules/ProxyWPTP.php:194
+msgid "The requests to Telegram will be sent via your Google Script."
+msgstr "Запросы в Telegram  буду отправлены через Google Script"
+
+#: modules/ProxyWPTP.php:195
+msgid "See help page"
+msgstr "Смотрите страницу справки"
+
+#: modules/ProxyWPTP.php:205
+msgid "Proxy Host"
+msgstr "Хост Прокси"
+
+#: modules/ProxyWPTP.php:211
+msgid "Host IP or domain name like 192.168.55.124"
+msgstr "Серый IP хоста"
+
+#: modules/ProxyWPTP.php:216
+msgid "Proxy Port"
+msgstr "Порт прокси"
+
+#: modules/ProxyWPTP.php:222
+msgid "Target Port like 8080"
+msgstr "Порт назначения 8080"
+
+#: modules/ProxyWPTP.php:226
+msgid "Proxy Type"
+msgstr "Тип прокси"
+
+#: modules/ProxyWPTP.php:231
+msgid "HTTP"
+msgstr "HTTP"
+
+#: modules/ProxyWPTP.php:235
+msgid "SOCKS4"
+msgstr "SOCKS4"
+
+#: modules/ProxyWPTP.php:239
+msgid "SOCKS4A"
+msgstr "SOCKS4A"
+
+#: modules/ProxyWPTP.php:243
+msgid "SOCKS5"
+msgstr "SOCKS5"
+
+#: modules/ProxyWPTP.php:247
+msgid "SOCKS5_HOSTNAME"
+msgstr "Хост SOCKS5"
+
+#: modules/ProxyWPTP.php:254
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: modules/ProxyWPTP.php:260 modules/ProxyWPTP.php:271
+msgid "Leave empty if not required"
+msgstr "Оставьте пустой если не нужно"
+
+#: modules/ProxyWPTP.php:265
+msgid "Password"
+msgstr "Пароль"
+
+#: modules/ProxyWPTP.php:290
+msgid ""
+"You can use this script to bypass the bans on Telegram API by different "
+"hosts. Simply send the request to this script instead of the Telegram Bot "
+"API after deploying it as a web app and allowing anonymous access."
+msgstr ""
+
+#: modules/ProxyWPTP.php:293
+msgid "How to Deploy"
+msgstr "Как развернуть"
+
+#: modules/ProxyWPTP.php:295
+#, php-format
+msgid "Goto <a href=\"%s\">script.google.com</a> and sign in if required"
+msgstr ""
+"Перейдтие <a href=\"%s\">script.google.com</a> и войдите в аккаунт если "
+"потребуется"
+
+#: modules/ProxyWPTP.php:296
+msgid "Create a new project and give it a name"
+msgstr "Создайте новый проект и дайте ему имя"
+
+#: modules/ProxyWPTP.php:297
+msgid ""
+"It should open a file (Code.gs by default). Remove the contents of this file"
+msgstr ""
+
+#: modules/ProxyWPTP.php:298
+msgid ""
+"Copy the contents of below code and paste into your project file (Code.gs)"
+msgstr ""
+
+#: modules/ProxyWPTP.php:299
+msgid "Click File > Save or press Ctrl+S"
+msgstr "Нажмите File > Save или нажмите Ctrl + S на клавиатуре"
+
+#: modules/ProxyWPTP.php:300
+msgid "Click \"Publish\" from the menu and select \"Deploy as web app...\""
+msgstr ""
+
+#: modules/ProxyWPTP.php:301
+msgid "If asked, Enter any name for the project and click \"OK\""
+msgstr ""
+
+#: modules/ProxyWPTP.php:302
+msgid "In \"Execute the app as:\", select \"Me (your email)\" [IMPORTANT]"
+msgstr ""
+
+#: modules/ProxyWPTP.php:303
+msgid ""
+"In \"Who has access to the app:\", select \"Anyone, even anonymous"
+"\" [IMPORTANT]"
+msgstr ""
+
+#: modules/ProxyWPTP.php:304
+msgid "Click \"Deploy\" to open the Authorization box"
+msgstr ""
+
+#: modules/ProxyWPTP.php:305
+msgid "Click \"Review Permissions\" to authorize the script"
+msgstr ""
+
+#: modules/ProxyWPTP.php:306
+msgid "In the popup window select your Google Account"
+msgstr ""
+
+#: modules/ProxyWPTP.php:307
+msgid "On the next screen, click \"Allow\""
+msgstr ""
+
+#: modules/ProxyWPTP.php:308
+msgid ""
+"After redirection, you should see \"This project is now deployed as a web app"
+"\""
+msgstr ""
+
+#: modules/ProxyWPTP.php:309
+msgid "Copy the \"Current web app URL\" and paste it in plugin"
+msgstr ""
+
+#: modules/WooCommerceWPTP.php:89
+msgid "Product stock status"
+msgstr "Продукт в наличии"
+
+#: modules/WooCommerceWPTP.php:90 modules/WooCommerceWPTP.php:805
+msgid "Product"
+msgstr "Продукт"
+
+#: modules/WooCommerceWPTP.php:91
+msgid "Stock status"
+msgstr "Наличие"
+
+#: modules/WooCommerceWPTP.php:94
+msgid "No stock"
+msgstr "Нет в наличии"
+
+#: modules/WooCommerceWPTP.php:97
+msgid "Low stock"
+msgstr "Малое количество"
+
+#: modules/WooCommerceWPTP.php:98
+msgid "Current quantity"
+msgstr "Текущее количество"
+
+#: modules/WooCommerceWPTP.php:133 modules/WooCommerceWPTP.php:177
+msgid "Order status changed"
+msgstr "Статус заказа изменен"
+
+#: modules/WooCommerceWPTP.php:134 modules/WooCommerceWPTP.php:178
+#: modules/WooCommerceWPTP.php:217 modules/WooCommerceWPTP.php:268
+#: modules/WooCommerceWPTP.php:344
+msgid "Order number"
+msgstr "Номер заказа"
+
+#: modules/WooCommerceWPTP.php:135
+msgid "Old status"
+msgstr "Старый статус"
+
+#: modules/WooCommerceWPTP.php:136 modules/WooCommerceWPTP.php:179
+msgid "New status"
+msgstr "Новый статус"
+
+#: modules/WooCommerceWPTP.php:216 modules/WooCommerceWPTP.php:267
+#: modules/WooCommerceWPTP.php:982 modules/WooCommerceWPTP.php:995
+msgid "New order note"
+msgstr "Комментарий нового заказа"
+
+#: modules/WooCommerceWPTP.php:218 modules/WooCommerceWPTP.php:269
+msgid "Note"
+msgstr "Комментарий"
+
+#: modules/WooCommerceWPTP.php:343
+msgid "New Order"
+msgstr "Новый заказ"
+
+#: modules/WooCommerceWPTP.php:349
+msgid "Phone"
+msgstr ""
+
+#: modules/WooCommerceWPTP.php:353
+msgid "Location"
+msgstr "Местоположение"
+
+#: modules/WooCommerceWPTP.php:354
+msgid "Total price"
+msgstr "Итого"
+
+#: modules/WooCommerceWPTP.php:355
+msgid "Payment method"
+msgstr "Вид оплаты"
+
+#: modules/WooCommerceWPTP.php:356
+msgid "Items"
+msgstr "Товары"
+
+#: modules/WooCommerceWPTP.php:393
+msgid "Your profile has been linked to this Telegram account:"
+msgstr "Ваш профиль был привязан в аккаунту Telegram:"
+
+#: modules/WooCommerceWPTP.php:413
+msgid "Cash payment 💴"
+msgstr "Наличными 💴"
+
+#: modules/WooCommerceWPTP.php:414
+msgid "Cash payment upon receipt"
+msgstr "Оплата наличными при получении"
+
+#: modules/WooCommerceWPTP.php:420
+msgid "Card payment 💳"
+msgstr "Оплата картой 💳"
+
+#: modules/WooCommerceWPTP.php:421
+msgid "Card payment upon receipt"
+msgstr "Оплата картой при получении"
+
+#: modules/WooCommerceWPTP.php:480
+msgid "Products 📑"
+msgstr "Товары 📑"
+
+#: modules/WooCommerceWPTP.php:481
+msgid "Product Categories 📖"
+msgstr "Категории 📖"
+
+#: modules/WooCommerceWPTP.php:482
+msgid "Cart 🛒"
+msgstr "Корзина 🛒"
+
+#: modules/WooCommerceWPTP.php:483
+msgid "Checkout"
+msgstr "Оформить"
+
+#: modules/WooCommerceWPTP.php:484
+msgid "Your cart is empty."
+msgstr "Ваша корзина пуста."
+
+#: modules/WooCommerceWPTP.php:485
+msgid "Empty Cart?"
+msgstr "Очистить корзину?"
+
+#: modules/WooCommerceWPTP.php:486
+msgid "Cart has been empty."
+msgstr "Корзина была очищена."
+
+#: modules/WooCommerceWPTP.php:487
+msgid "Refresh Cart"
+msgstr "Корзина обновлена"
+
+#: modules/WooCommerceWPTP.php:488
+msgid "In stock"
+msgstr "В наличии"
+
+#: modules/WooCommerceWPTP.php:489
+msgid "Out of stock"
+msgstr "Нет в наличии"
+
+#: modules/WooCommerceWPTP.php:490
+msgid "Menu 🍽"
+msgstr "Меню 🍽"
+
+#: modules/WooCommerceWPTP.php:617
+msgid "WooCommerce Tags"
+msgstr "Теги WooCommerce"
+
+#: modules/WooCommerceWPTP.php:620
+msgid "The currency symbol"
+msgstr "Символ валюты"
+
+#: modules/WooCommerceWPTP.php:621
+msgid "The price of this product"
+msgstr "Цена товара"
+
+#: modules/WooCommerceWPTP.php:622
+msgid "The regular price of this product"
+msgstr "Обычная цена товара"
+
+#: modules/WooCommerceWPTP.php:623
+msgid "The sale price of this product"
+msgstr "Цена распродажи товара"
+
+#: modules/WooCommerceWPTP.php:624
+msgid "The width of this product"
+msgstr "Ширина товара"
+
+#: modules/WooCommerceWPTP.php:625
+msgid "The length of this product"
+msgstr "Длина товара"
+
+#: modules/WooCommerceWPTP.php:626
+msgid "The height of this product"
+msgstr "Высота товара"
+
+#: modules/WooCommerceWPTP.php:627
+msgid "The weight of this product"
+msgstr "Вес товара"
+
+#: modules/WooCommerceWPTP.php:628
+msgid "The dimensions of this product"
+msgstr "Размеры товара"
+
+#: modules/WooCommerceWPTP.php:629
+msgid "The average rating of this product"
+msgstr "Средний рейтинг товара"
+
+#: modules/WooCommerceWPTP.php:630
+msgid "The SKU (Stock Keeping Unit) of this product"
+msgstr "Артикул товара"
+
+#: modules/WooCommerceWPTP.php:631
+msgid "Is this product downloadable? (Yes or No)"
+msgstr "Это товар скачиваемый (Да или Нет)"
+
+#: modules/WooCommerceWPTP.php:632
+msgid "Is this product virtual? (Yes or No)"
+msgstr "Этот товар виртуальный (Да или Нет)"
+
+#: modules/WooCommerceWPTP.php:633
+msgid "Is this product sold individually? (Yes or No)"
+msgstr "Этот продукт продается по отдельности? (Да или Нет)"
+
+#: modules/WooCommerceWPTP.php:634
+msgid "The tax status of this product"
+msgstr "Статус НДС товара"
+
+#: modules/WooCommerceWPTP.php:635
+msgid "The tax class of this product"
+msgstr "Класс налога товара"
+
+#: modules/WooCommerceWPTP.php:636
+msgid "The stock amount of this product"
+msgstr "Количество товара в наличии"
+
+#: modules/WooCommerceWPTP.php:637
+msgid "The stock status of this product"
+msgstr "Наличие товара"
+
+#: modules/WooCommerceWPTP.php:638
+msgid "Whether or not backorders allowed?"
+msgstr ""
+
+#: modules/WooCommerceWPTP.php:639
+msgid "Is this a featured product? (Yes or No)"
+msgstr "Это предлагаемый товар? (Да или Нет)"
+
+#: modules/WooCommerceWPTP.php:640
+msgid "Is this product visible? (Yes or No)"
+msgstr "Этот товар видимый? (Да или Нет)"
+
+#: modules/WooCommerceWPTP.php:670
+msgid "All products:"
+msgstr "Все товары:"
+
+#: modules/WooCommerceWPTP.php:709
+msgid "Selected"
+msgstr "Выбрано"
+
+#: modules/WooCommerceWPTP.php:733
+msgid "Galleries"
+msgstr "Галереи"
+
+#: modules/WooCommerceWPTP.php:756
+msgid "Back to Product"
+msgstr "Назад к товару"
+
+#: modules/WooCommerceWPTP.php:766 modules/WooCommerceWPTP.php:799
+#: modules/WooCommerceWPTP.php:811
+msgid "The product does not exist"
+msgstr "Товар не существует"
+
+#: modules/WooCommerceWPTP.php:778
+msgid "Remove from Cart:"
+msgstr "Удалить из корзины:"
+
+#: modules/WooCommerceWPTP.php:781
+msgid "Add to Cart:"
+msgstr "Добавить в корзину:"
+
+#: modules/WooCommerceWPTP.php:783
+msgid "Please select product variations:"
+msgstr "Пожалуйста выберите вариации товара:"
+
+#: modules/WooCommerceWPTP.php:852
+msgid "Product Category Invalid!"
+msgstr "Категория товара неверна!"
+
+#: modules/WooCommerceWPTP.php:895
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: modules/WooCommerceWPTP.php:933
+msgid "Restaurant mode"
+msgstr "Режим общепит"
+
+#: modules/WooCommerceWPTP.php:937
+msgid "Enabled"
+msgstr "Включено"
+
+#: modules/WooCommerceWPTP.php:943
+msgid "Products Per Page"
+msgstr "Товаров на страницу"
+
+#: modules/WooCommerceWPTP.php:951
+msgid "Exclude Categories"
+msgstr "Исключить категории"
+
+#: modules/WooCommerceWPTP.php:953 modules/WooCommerceWPTP.php:959
+msgid "None"
+msgstr "Нету"
+
+#: modules/WooCommerceWPTP.php:957
+msgid "Exclude Display Categories"
+msgstr "Исключить категории из просмотра"
+
+#: modules/WooCommerceWPTP.php:970
+msgid "New order"
+msgstr "Новый заказ"
+
+#: modules/WooCommerceWPTP.php:973 modules/WooCommerceWPTP.php:992
+msgid "Order status change"
+msgstr "Статус заказа изменен"
+
+#: modules/WooCommerceWPTP.php:976
+msgid "Product low stock"
+msgstr "Малое количество товара"
+
+#: modules/WooCommerceWPTP.php:979
+msgid "Product no stock"
+msgstr "Товар не наличии"
+
+#: modules/WooCommerceWPTP.php:988
+msgid "Customers"
+msgstr "Покупатели"
+
+#: modules/WooCommerceWPTP.php:1000
+msgid "Interactive chat"
+msgstr "Интерактивный чат"
+
+#: modules/WooCommerceWPTP.php:1004
+msgid "Checkout orders inside chat"
+msgstr "Оформление заказов прямо в чате"
+
+#: modules/WooCommerceWPTP.php:1014
+msgid "Dont display links in chat "
+msgstr "Не показывать ссылки в чате"
+
+#: modules/WooCommerceWPTP.php:1023
+msgid "Empty the cart"
+msgstr "Очистить корзину"
+
+#: modules/WooCommerceWPTP.php:1027
+msgid "After Redirect to Cart Page"
+msgstr "После переадресации в корзину"
+
+#: modules/WooCommerceWPTP.php:1037
+msgid "Empty WC cart before redirect"
+msgstr "Очищать корзину WC перед переходом"
+
+#: modules/WooCommerceWPTP.php:1047
+msgid "After Payment Complete"
+msgstr "После завершения опалаты"
+
+#: modules/WooCommerceWPTP.php:1056
+msgid "Display"
+msgstr "Показать"
+
+#: modules/WooCommerceWPTP.php:1059
+msgid "Meta Data"
+msgstr "Мета данные"
+
+#: modules/WooCommerceWPTP.php:1062 modules/WooCommerceWPTP.php:1482
+msgid "Weight"
+msgstr "Вес"
+
+#: modules/WooCommerceWPTP.php:1065 modules/WooCommerceWPTP.php:1486
+msgid "Dimensions"
+msgstr "Размеры"
+
+#: modules/WooCommerceWPTP.php:1068
+msgid "Attributes"
+msgstr "Аттрибуты"
+
+#: modules/WooCommerceWPTP.php:1071
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: modules/WooCommerceWPTP.php:1076
+msgid "Keyboard"
+msgstr "Клавиатура"
+
+#: modules/WooCommerceWPTP.php:1079
+msgid "Gallery Button"
+msgstr "Кнопка галереи"
+
+#: modules/WooCommerceWPTP.php:1082
+msgid "Category Buttons"
+msgstr "Кнопка категорий"
+
+#: modules/WooCommerceWPTP.php:1085
+msgid "All products Button"
+msgstr "Кнопка \"Все товары\""
+
+#: modules/WooCommerceWPTP.php:1090
+msgid "Products"
+msgstr "Товары"
+
+#: modules/WooCommerceWPTP.php:1093
+msgid "Simple list"
+msgstr "Простой список"
+
+#: modules/WooCommerceWPTP.php:1118
+msgid "⬅️"
+msgstr "⬅️"
+
+#: modules/WooCommerceWPTP.php:1190 modules/WooCommerceWPTP.php:1194
+msgid "Select"
+msgstr "Выберите"
+
+#: modules/WooCommerceWPTP.php:1401
+msgid "Selected products:"
+msgstr "Найденные товары:"
+
+#: modules/WooCommerceWPTP.php:1485
+msgid "N/A"
+msgstr "Н/Д"
+
+#: modules/WooCommerceWPTP.php:1569
+msgid "Send contact 📲"
+msgstr "Отправить контакт 📲"
+
+#: modules/WooCommerceWPTP.php:1576
+msgid "Input your phone or send your contact"
+msgstr "Введите Ваш телефон или отправьте контакт"
+
+#: modules/WooCommerceWPTP.php:1589
+msgid "Send location 📍"
+msgstr "Отправить положение 📍"
+
+#: modules/WooCommerceWPTP.php:1595
+msgid "Input your address or send location"
+msgstr "Введите Ваш адрес или отправьте положение"
+
+#: modules/WooCommerceWPTP.php:1623
+msgid "Select payment method"
+msgstr "Выберите вид оплаты"
+
+#: modules/WooCommerceWPTP.php:1659
+#, php-format
+msgid ""
+"Thank you. Your order has been placed. Order number #%s We will contact You "
+"as soon as possible"
+msgstr ""
+"Спасибо. Ваш заказ принят.\n"
+"Заказ №%s. \n"
+"Мы свяжемся с Вами в ближайшее время"
+
+#: modules/WooCommerceWPTP.php:1674
+msgid "Input your name"
+msgstr "Введите ваше имя"
+
+#: modules/WooCommerceWPTP.php:1727
+msgid "Total"
+msgstr "Итого"
+
+#: modules/WooCommerceWPTP.php:1732
+msgid "Your cart:"
+msgstr "Ваша корзина:"
+
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:35
+msgid "Notification for lock the user"
+msgstr "Уведомление о блокировке пользователя"
+
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:54
+msgid "All In One WP Security & Firewall lock the user"
+msgstr ""
+
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:59
+#: plugins/WPUserAvatarWPTP.php:72 plugins/WordfenceWPTP.php:164
+msgid "User Name"
+msgstr "Имя пользователя"
+
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:61
+msgid "IP range"
+msgstr "Диапазон IP"
+
+#: plugins/AllInOneWPSecurityFirewallWPTP.php:71
+msgid "All In One WP Security & Firewall Dashboard"
+msgstr ""
+
+#: plugins/BackUpWordPressServiceWPTP.php:41
+msgid "Attache backup file"
+msgstr "Прикрепить файл бекапа"
+
+#: plugins/BackUpWordPressWPTP.php:39
+msgid "Notification for new backup"
+msgstr "Уведомление о новом бекапе"
+
+#: plugins/BackUpWordPressWPTP.php:45
+msgid "Requires the Schedule \"Telegram Notification\" option to be enabled."
+msgstr ""
+
+#: plugins/BackUpWordPressWPTP.php:76
+#, php-format
+msgid "Backup of %s Failed"
+msgstr "Бэкап %s не удался"
+
+#: plugins/BackUpWordPressWPTP.php:77
+#, php-format
+msgid "BackUpWordPress was unable to backup your site %1$s."
+msgstr "BackUpWordPress не может забекапить Ваш сайт %1$s."
+
+#: plugins/BackUpWordPressWPTP.php:78
+msgid "Here are the errors that we've encountered:"
+msgstr "Ошибки которые мы обнаружили:"
+
+#: plugins/BackUpWordPressWPTP.php:79
+msgid ""
+"If the errors above look like Martian, you can find further assistance on "
+"our support forum:"
+msgstr ""
+
+#: plugins/BackUpWordPressWPTP.php:84
+#, php-format
+msgid "Backup of %s"
+msgstr "Бэкап %s"
+
+#: plugins/BackUpWordPressWPTP.php:85
+#, php-format
+msgid "BackUpWordPress has completed a backup of your site %s."
+msgstr "BackUpWordPress успешно завершил бэкап Вашего сайта %s."
+
+#: plugins/BackUpWordPressWPTP.php:86
+msgid "You can download the backup file by clicking the link below:"
+msgstr "Вы можете скачать файл бекапа по этой ссылке:"
+
+#: plugins/BackUpWordPressWPTP.php:92
+msgid "The backup file should be attached to this message."
+msgstr "Файйл бэкапа должен быть приложен к этому сообщению."
+
+#: plugins/BackUpWordPressWPTP.php:100
+msgid "Unfortunately, the backup file was too large to attach to this message."
+msgstr ""
+"Неожиданно, файл бэкапа слишком большой чтобы приложить его к этому "
+"сообщению."
+
+#: plugins/BackUpWordPressWPTP.php:134
+msgid "BackUpWordPress Dashboard"
+msgstr "Панель BackUpWordPress"
+
+#: plugins/BackWPupWPTP.php:39
+msgid "Notification for send log"
+msgstr "Уведомление об отправке лога"
+
+#: plugins/BackWPupWPTP.php:61
+msgid "BackWPup new log"
+msgstr "Новый лог BackWPup"
+
+#: plugins/BackWPupWPTP.php:80
+msgid "BackWPup Dashboard"
+msgstr "Панель BackWPup"
+
+#: plugins/CalderaFormsWPTP.php:33 plugins/ContactForm7WPTP.php:37
+#: plugins/EverestFormsWPTP.php:39 plugins/FormidableFormsWPTP.php:38
+#: plugins/ForminatorWPTP.php:48 plugins/GravityFormsWPTP.php:46
+#: plugins/HTMLFormsWPTP.php:40 plugins/HappyFormsWPTP.php:34
+#: plugins/NinjaFormsWPTP.php:34 plugins/QuFormWPTP.php:60
+#: plugins/VisualFormBuilderWPTP.php:34 plugins/WPFormsWPTP.php:37
+#: plugins/WeFormsWPTP.php:38
+msgid "Notification for new message"
+msgstr "Уведомление о новом сообщении"
+
+#: plugins/CalderaFormsWPTP.php:43 plugins/ContactForm7WPTP.php:61
+#: plugins/EverestFormsWPTP.php:49 plugins/FormidableFormsWPTP.php:48
+#: plugins/ForminatorWPTP.php:58 plugins/GravityFormsWPTP.php:56
+#: plugins/HTMLFormsWPTP.php:50 plugins/HappyFormsWPTP.php:44
+#: plugins/NinjaFormsWPTP.php:44 plugins/QuFormWPTP.php:70
+#: plugins/VisualFormBuilderWPTP.php:44 plugins/WPFormsWPTP.php:47
+#: plugins/WeFormsWPTP.php:48
+msgid "Notification from this forms"
+msgstr "Уведомления  этих форм"
+
+#: plugins/CalderaFormsWPTP.php:50 plugins/ContactForm7WPTP.php:70
+#: plugins/EverestFormsWPTP.php:56 plugins/FormidableFormsWPTP.php:55
+#: plugins/ForminatorWPTP.php:67 plugins/GravityFormsWPTP.php:63
+#: plugins/HTMLFormsWPTP.php:59 plugins/HappyFormsWPTP.php:53
+#: plugins/NinjaFormsWPTP.php:51 plugins/QuFormWPTP.php:77
+#: plugins/VisualFormBuilderWPTP.php:51 plugins/WPFormsWPTP.php:51
+#: plugins/WeFormsWPTP.php:57
+msgid "All"
+msgstr "Все"
+
+#: plugins/CalderaFormsWPTP.php:80 plugins/ContactForm7WPTP.php:160
+#: plugins/EverestFormsWPTP.php:86 plugins/FormidableFormsWPTP.php:109
+#: plugins/ForminatorWPTP.php:97 plugins/GravityFormsWPTP.php:92
+#: plugins/HTMLFormsWPTP.php:84 plugins/HappyFormsWPTP.php:77
+#: plugins/NinjaFormsWPTP.php:78 plugins/QuFormWPTP.php:106
+#: plugins/VisualFormBuilderWPTP.php:79 plugins/WPFormsWPTP.php:100
+#: plugins/WeFormsWPTP.php:83
+msgid "New message"
+msgstr "Новое сообщение"
+
+#: plugins/ContactForm7WPTP.php:46
+#, php-format
+msgid ""
+"Open the <a href=\"%s\" target=\"_blank\">Additional Settings</a> tab in the "
+"contact form editor page, and add lines like these:"
+msgstr ""
+"Откройте вкладку<a href=\"%s\" target=\"_blank\">Дополнительные настройки</"
+"a> в редакторе форм, и добавьте эти строки:"
+
+#: plugins/ContactForm7WPTP.php:167
+msgid "Subject"
+msgstr "Тема"
+
+#: plugins/ContactForm7WPTP.php:170
+msgid "Message"
+msgstr "Сообщение"
+
+#: plugins/DologinWPTP.php:47
+msgid "Two factor auth with Telegram bot"
+msgstr "Двухфакторная авторизация с Telegram ботом"
+
+#: plugins/DologinWPTP.php:54
+msgid "This feature replaces with DoLogin Two Step SMS Auth."
+msgstr "Эта функция заменяет DoLogin Two Step SMS Auth."
+
+#: plugins/DologinWPTP.php:55
+msgid "(Requires Telegram Connectivity in WordPress tab)"
+msgstr ""
+
+#: plugins/DologinWPTP.php:226
+#, php-format
+msgid "Dynamic Code: %1$s ,Location: %2$s."
+msgstr "Временный код %1$s, Местополжение: %2$s."
+
+#: plugins/FormidableFormsWPTP.php:154
+msgid "(no title)"
+msgstr "(без заголовка)"
+
+#: plugins/FormidableFormsWPTP.php:154
+msgid " (child)"
+msgstr " (дочерний)"
+
+#: plugins/IThemesSecurityWPTP.php:35
+msgid "Notification for new blacklisted IP"
+msgstr "Уведомление об IP в черном списке"
+
+#: plugins/IThemesSecurityWPTP.php:53
+msgid "iThemes Security new blacklisted IP"
+msgstr "Новый IP в черном списке iThemes"
+
+#: plugins/IThemesSecurityWPTP.php:54 plugins/WordfenceWPTP.php:162
+msgid "IP"
+msgstr "IP"
+
+#: plugins/IThemesSecurityWPTP.php:64
+msgid "iThemes Security Dashboard"
+msgstr ""
+
+#: plugins/MailchimpForWPWPTP.php:42
+msgid "Notification for email subscribe"
+msgstr ""
+
+#: plugins/MailchimpForWPWPTP.php:52
+msgid "Notification for email unsubscribe"
+msgstr ""
+
+#: plugins/MailchimpForWPWPTP.php:100
+msgid "New email subscribed to Mailchimp"
+msgstr ""
+
+#: plugins/MailchimpForWPWPTP.php:103
+msgid "Subscriber email in Mailchimp updated"
+msgstr ""
+
+#: plugins/MailchimpForWPWPTP.php:107
+msgid "Email unsubscribed from Mailchimp"
+msgstr ""
+
+#: plugins/NewsletterWPTP.php:38 plugins/WPSMSWPTP.php:34
+msgid "Notification for new subscriber"
+msgstr "Уведомление для нового подписчика"
+
+#: plugins/NewsletterWPTP.php:48
+msgid "Notification for unsubscribe"
+msgstr ""
+
+#: plugins/NewsletterWPTP.php:76
+msgid "New subscriber for newsletter"
+msgstr "Новый подписчик новостей"
+
+#: plugins/NewsletterWPTP.php:76
+msgid "Unsubscribe from newsletter"
+msgstr "Отписаться от новостей"
+
+#: plugins/NewsletterWPTP.php:91
+msgid "Newsletter Dashboard"
+msgstr "Панель новостей"
+
+#: plugins/WPCerberSecurityWPTP.php:18
+msgid "Citadel mode is activated"
+msgstr "Режим цитадели активирован"
+
+#: plugins/WPCerberSecurityWPTP.php:19
+msgid "Number of lockouts is increasing"
+msgstr ""
+
+#: plugins/WPCerberSecurityWPTP.php:20
+msgid "A new version of WP Cerber Security is available to install"
+msgstr ""
+
+#: plugins/WPCerberSecurityWPTP.php:21
+msgid "The WP Cerber Security plugin has been deactivated"
+msgstr ""
+
+#: plugins/WPCerberSecurityWPTP.php:22
+msgid "New Custom login URL"
+msgstr ""
+
+#: plugins/WPCerberSecurityWPTP.php:23
+msgid "A new activity has been recorded"
+msgstr "Зафиксирована новая активность"
+
+#: plugins/WPCerberSecurityWPTP.php:24
+msgid "Weekly report"
+msgstr "Недельный отчет"
+
+#: plugins/WPCerberSecurityWPTP.php:25
+msgid "Scanner Report"
+msgstr "Отчет сканнера"
+
+#: plugins/WPCerberSecurityWPTP.php:53
+msgid "Notification for events"
+msgstr "Уведомление для событий"
+
+#: plugins/WPCerberSecurityWPTP.php:98
+msgid "WP Cerber Security Dashboard"
+msgstr ""
+
+#: plugins/WPSMSWPTP.php:53
+msgid "SMS new subscriber"
+msgstr "Новый подписчик SMS"
+
+#: plugins/WPSMSWPTP.php:56
+msgid "Mobile Number"
+msgstr "Мобильный телефон"
+
+#: plugins/WPStatisticsWPTP.php:35
+msgid "Notification for statistical reporting"
+msgstr ""
+
+#: plugins/WPStatisticsWPTP.php:43
+msgid ""
+"Requires enable \"Statistical reporting\" option in the Notification tab in "
+"WP Statistics settings."
+msgstr ""
+"Необходимо включить параметр \"Статистические отчеты\" в разделе Уведомления "
+"в настройках статистики WP."
+
+#: plugins/WPStatisticsWPTP.php:58
+msgid "WP Statistics report"
+msgstr "Отчет статистики WP"
+
+#: plugins/WPStatisticsWPTP.php:75
+msgid "WP Statistics Dashboard"
+msgstr "Панель статистики WP"
+
+#: plugins/WPUserAvatarWPTP.php:34
+msgid "Notification for user avatar change"
+msgstr ""
+
+#: plugins/WPUserAvatarWPTP.php:71
+msgid "User avatar change notification"
+msgstr "Уведомление смены аватара пользователя"
+
+#: plugins/WPUserAvatarWPTP.php:82
+msgid "User Profile"
+msgstr "Профиль пользователя"
+
+#: plugins/WordfenceWPTP.php:17
+msgid "Wordfence auto update"
+msgstr "Автообновление Wordfence"
+
+#: plugins/WordfenceWPTP.php:18
+msgid "Wordfence firewall deactivated"
+msgstr "Брэндмауэр Wordfence деактивирован"
+
+#: plugins/WordfenceWPTP.php:19
+msgid "Wordfence deactivated"
+msgstr "Wordfence деактивирован"
+
+#: plugins/WordfenceWPTP.php:20
+msgid "IP address blocked"
+msgstr "IP адрес заблокирован"
+
+#: plugins/WordfenceWPTP.php:21
+msgid "IP address throttled"
+msgstr ""
+
+#: plugins/WordfenceWPTP.php:22
+msgid "Lost password form used"
+msgstr "Использована форма сброса пароля"
+
+#: plugins/WordfenceWPTP.php:23
+msgid "User locked out from login"
+msgstr "Вход пользователя заблокирован"
+
+#: plugins/WordfenceWPTP.php:24
+msgid "Administrator user logged in"
+msgstr "Администтратор вошел"
+
+#: plugins/WordfenceWPTP.php:25
+msgid "Administrator user logged in from a new device or location"
+msgstr "Администратор вошел с нового устройства или месста"
+
+#: plugins/WordfenceWPTP.php:26
+msgid "Non administrator user logged in"
+msgstr "Нет админисстраторов он-лайн"
+
+#: plugins/WordfenceWPTP.php:27
+msgid "Non administrator user logged in from a new device or location"
+msgstr ""
+
+#: plugins/WordfenceWPTP.php:28
+msgid ""
+"Someone is blocked from logging in for using a password found in a breach"
+msgstr ""
+
+#: plugins/WordfenceWPTP.php:29
+msgid "Increase in attack rate"
+msgstr ""
+
+#: plugins/WordfenceWPTP.php:73
+msgid "Notification for security events"
+msgstr "Уведомления о безопасности"
+
+#: plugins/WordfenceWPTP.php:101
+msgid "Wordfence security event"
+msgstr "Событие Wordfence"
+
+#: plugins/WordfenceWPTP.php:103
+msgid "Event"
+msgstr "Событие"
+
+#: plugins/WordfenceWPTP.php:114
+msgid "Days"
+msgstr "Дни"
+
+#: plugins/WordfenceWPTP.php:115
+msgid "Hours"
+msgstr "Часы"
+
+#: plugins/WordfenceWPTP.php:117
+msgid "Seconds"
+msgstr "Секунды"
+
+#: plugins/WordfenceWPTP.php:146
+msgid "Wordfence Dashboard"
+msgstr "Панель Wordfence"
+
+#: plugins/WordfenceWPTP.php:165
+msgid "Reason"
+msgstr "Причина"
+
+#: plugins/WordfenceWPTP.php:166
+msgid "Duration"
+msgstr "Длительность"
+
+#: plugins/WordfenceWPTP.php:168
+msgid "Reset Password URL"
+msgstr "Ссылка сброса пароля"
+
+#: plugins/WordfenceWPTP.php:169
+msgid "Support URL"
+msgstr "URL поддержки"
+
+#: plugins/WordfenceWPTP.php:170
+msgid "Attack Count"
+msgstr "Количество атак"
+
+#: plugins/WordfenceWPTP.php:171
+msgid "Attack Table"
+msgstr "Таблица атак"
+
+#~ msgid "Product Categories"
+#~ msgstr "Категории"
+
+#~ msgid "Cart"
+#~ msgstr "Корзина"
+
+#~ msgid "Next >"
+#~ msgstr "Далее >"

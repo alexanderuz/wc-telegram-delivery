@@ -521,7 +521,7 @@ class WPTelegramPro
         return $this->options = get_option($this->plugin_key);
     }
 
-    function query($query = array())
+    function query($query = array(), $dpage=0)
     {
         global $post;
         $keys = array('per_page', 'category_id', 'post_type', 's');
@@ -535,7 +535,7 @@ class WPTelegramPro
 
         $temp = $post;
         $per_page = $query['per_page'] == null ? $this->per_page : $query['per_page'];
-        $page = $this->user['page'];
+        $page = $dpage > 0 ? $dpage : $this->user['page'];
 
         $image_size = $this->get_option('image_size');
         $items = array();
