@@ -351,7 +351,7 @@ class WooCommerceWPTP extends WPTelegramPro
             if (empty($order->get_shipping_address_2()))
 	            $text .= __('Address', $this->plugin_key) . ': *' . $order->get_shipping_address_1() . "*\n";
             else
-	            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
+	            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . ': '. $order->get_shipping_address_1() . "\n";
             $text .= __('Total price', $this->plugin_key) . ': *' . $this->wc_price($order->get_total()) . "*\n";
             $text .= __('Payment method', $this->plugin_key) . ': ' . $this->get_paysystem($order->get_payment_method())['name'] . "\n";
             $text .= __('Order time', $this->plugin_key) . ': ' .$order->get_customer_note() . "\n";
@@ -1874,7 +1874,7 @@ class WooCommerceWPTP extends WPTelegramPro
         if (empty($cart['address2']))
             $text .= __('Address', $this->plugin_key) . ': *' . $cart['address1'] . "*\n";
         else
-            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . "\n";
+            $text .= __('Address', $this->plugin_key) . ': ' . __('Location', $this->plugin_key) . ': '.$cart['address1'] . "\n";
         $text .= __('Total price', $this->plugin_key) . ': *' . $this->wc_price($order->get_total()) . "*\n";
         $text .= __('Payment method', $this->plugin_key) . ': ' . $this->get_paysystem($cart['paysystem'])['name'] . "\n";
         $text .= __('Order time', $this->plugin_key) . ': *' .$cart['ordertime'] . "*\n";
@@ -1921,7 +1921,7 @@ class WooCommerceWPTP extends WPTelegramPro
             if (is_array($message)) {
                 $cart['address1'] = $this->openCageGetAddress($message['latitude'], $message['longitude']);
                 $cart['address2'] = serialize($message);
-                $cart['address2'] = 'https://www.google.ru/maps/@' . $message['latitude'] . ',' . $message['longitude'] . ',15z';
+//                $cart['address2'] = 'https://www.google.ru/maps/@' . $message['latitude'] . ',' . $message['longitude'] . ',15z';
             } else {
                 $cart['address1'] = $message;
                 $cart['address2'] = '';
