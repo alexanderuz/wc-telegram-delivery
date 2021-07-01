@@ -1951,6 +1951,7 @@ class WooCommerceWPTP extends WPTelegramPro
         } elseif ($cart['order_state'] == 4) {
             if (is_array($message))
             {
+                $cart['name'] = $message['first_name'];
                 $cart['phone'] = $message['phone_number'];
             }
             else
